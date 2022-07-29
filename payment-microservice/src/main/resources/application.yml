@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:testDB}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+go:
+  api:
+    host: ${GO_API_HOST}
+    port: ${GO_API_PORT}

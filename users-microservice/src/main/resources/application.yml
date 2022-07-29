@@ -28,5 +28,5 @@ app:
   jwtRefreshExpirationMs: 1200000
   paypal:
     mode: sandbox
-    clientID:
-    secret:
+    clientID: Aa12HOfuR1vYgsltua0OIfgkMh3hYif4tA0vXserprIStvtphE6xvpQzwib0O9C2Ke--VeJI5_spFzod
+    secret: EI4D2w1F-_sDo_CCDvnvQKMafDJ1HTnwnV0Rn4JUIPi3KZUKgYacD4915Xv2Oo3LANAQc3ojHpvWvxNn
