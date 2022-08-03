@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("go")
+@FeignClient("go-api")
 public interface GoApiClient {
     @PostMapping("api/v1/payment/create")
     String createPayment(@RequestBody PayPalPaymentRequest request);

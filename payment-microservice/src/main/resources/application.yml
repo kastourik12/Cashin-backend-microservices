@@ -10,6 +10,8 @@ spring:
       ddl-auto: create
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  zipkin:
+    base-url: http://localhost9411
 go:
   api:
     host: ${GO_API_HOST:localhost}

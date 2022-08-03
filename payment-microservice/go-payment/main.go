@@ -42,14 +42,17 @@ func main() {
 	c := eureka.NewClient([]string{
 		"http://127.0.0.1:8761/eureka",
 	})
-	instance := eureka.NewInstanceInfo("localhost", "go", "192.168.8.100", 9090, 30, false) //Create a new instance to register
-	instance.Metadata = &eureka.MetaData{
-		Map: make(map[string]string),
+	instance := eureka.NewInstanceInfo("localhost", "go-api", "192.168.8.100", 9090, 30, false) //Create a new instance to register
+	err := c.RegisterInstance("go-api", instance)
+	if err != nil {
+		log.Println(err)
 	}
-	c.RegisterInstance("go", instance)             // Register new instance in your eureka(s)
-	c.GetApplication(instance.App)                 // retrieve the application "test"
-	c.GetInstance(instance.App, instance.HostName) // retrieve the instance from "test.com" inside "test"" app
-	err := c.SendHeartbeat(instance.App, instance.HostName)
+	app, err := c.GetApplication("go-api")
+	log.Println(app.Instances)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = c.SendHeartbeat("go-api", instance.HostName)
 	if err != nil {
 		log.Fatal(err)
 	}
