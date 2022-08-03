@@ -1,6 +1,6 @@
 package com.example.paymentmicroservice.controller;
 
-import com.example.paymentmicroservice.request.PayPalPaymentRequest;
+import com.example.clients.go.api.PayPalPaymentRequest;
 import com.example.paymentmicroservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class PaymentController {
     private final PaymentService paymentService;
     @PostMapping("create")
     public ResponseEntity<?> createPayment(@RequestBody PayPalPaymentRequest request) {
-        logger.debug(request.toString());
+        logger.info(request.toString());
         return this.paymentService.createPayment(request);
     }
     @GetMapping("execute")

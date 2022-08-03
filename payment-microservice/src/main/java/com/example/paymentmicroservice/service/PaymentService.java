@@ -1,10 +1,11 @@
 package com.example.paymentmicroservice.service;
 
-import com.example.paymentmicroservice.dto.PaymentDTO;
+import com.example.clients.go.api.GoApiClient;
+import com.example.clients.go.api.PayPalPaymentRequest;
+import com.example.clients.go.api.PaymentDTO;
 import com.example.paymentmicroservice.model.Payment;
 import com.example.paymentmicroservice.repository.PaymentRepository;
-import com.example.paymentmicroservice.request.PayPalPaymentRequest;
-import com.example.paymentmicroservice.request.PaymentExecutionRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +24,17 @@ public class PaymentService {
     @Value("${go.api.port}")
     private String apiPort;
     private final PaymentRepository paymentRepository;
-    private final RestTemplate restTemplate;
+    private final GoApiClient apiClient;
     public ResponseEntity<?> createPayment(PayPalPaymentRequest request) {
 
-        String response = restTemplate.postForEntity(
-                "http://"+apiHost+":"+apiPort+"/v1/paypal/create",
-                request,
-                String.class).getBody();
+        String response = apiClient.createPayment(request);
         return ResponseEntity.ok(response);
 
     }
     public ResponseEntity<?> executePayment(String paymentId,String PayerID){
-        PaymentExecutionRequest request = new PaymentExecutionRequest(PayerID,paymentId);
 
-        PaymentDTO paymentResponse = restTemplate.getForObject("http://"+apiHost+":"+apiPort+"/v1/paypal/execute?paymentId="+paymentId+"&PayerID="+PayerID,
-                PaymentDTO.class,request);
+
+        PaymentDTO paymentResponse = apiClient.executePayment(paymentId,PayerID);
         Payment payment = new Payment();
         payment.setPaymentId(paymentResponse.getPaymentId());
         payment.setPayerId(paymentResponse.getPayerId());

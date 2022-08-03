@@ -23,7 +23,7 @@ func (c *Paypal) CreatePayment(ctx *gin.Context) {
 		ctx.JSON(400, gin.H{"message": err.Error()})
 		return
 	}
-	ctx.JSON(200, successLink)
+	ctx.JSON(300, successLink)
 }
 
 func (c *Paypal) ExecutePayment(ctx *gin.Context) {

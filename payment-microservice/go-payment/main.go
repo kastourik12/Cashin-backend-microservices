@@ -30,27 +30,29 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	accessToken, err := client.GetAccessToken()
+	_, err = client.GetAccessToken()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(accessToken.Token)
 	paypalService = services.NewPaypalService(client, logger)
 	paypalController = controllers.NewPaypalController(paypalService)
 
 }
 func main() {
-	client := eureka.NewClient([]string{
-		"http://127.0.0.1:8761/eureka", //From a spring boot based eureka server
-		// add others servers here
+	c := eureka.NewClient([]string{
+		"http://127.0.0.1:8761/eureka",
 	})
-	instance := eureka.NewInstanceInfo("localhost", "go-paypal-api", "127.0.0.1", 9090, 30, false) //Create a new instance to register
+	instance := eureka.NewInstanceInfo("localhost", "go", "192.168.8.100", 9090, 30, false) //Create a new instance to register
 	instance.Metadata = &eureka.MetaData{
 		Map: make(map[string]string),
 	}
-	//add metadata for example
-	client.RegisterInstance("go-paypal-api", instance) // Register new instance in your eureka(s) // Retrieves all applications from eureka server(s) // retrieve the instance from "test.com" inside "test"" app
-	client.SendHeartbeat(instance.App, instance.HostName)
+	c.RegisterInstance("go", instance)             // Register new instance in your eureka(s)
+	c.GetApplication(instance.App)                 // retrieve the application "test"
+	c.GetInstance(instance.App, instance.HostName) // retrieve the instance from "test.com" inside "test"" app
+	err := c.SendHeartbeat(instance.App, instance.HostName)
+	if err != nil {
+		log.Fatal(err)
+	}
 	basePath := server.Group("/v1")
 	paypalController.RegisterRoutes(basePath)
 	log.Fatalf(server.Run(":9090").Error())

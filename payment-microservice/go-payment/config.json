@@ -7,9 +7,9 @@
     "consistency": ""
   },
   "cluster": {
-    "leader": "http://127.0.0.1:8761/eureka",
+    "leader": "http://localhost:8761/eureka",
     "machines": [
-      "http://127.0.0.1:8761/eureka"
+      "http://localhost:8761/eureka"
     ]
   }
 }

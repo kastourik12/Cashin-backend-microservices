@@ -7,3 +7,7 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+  instance:
+    preferIpAddress: true
+    hostname: localhost
+    ipAddr: 127.0.0.1

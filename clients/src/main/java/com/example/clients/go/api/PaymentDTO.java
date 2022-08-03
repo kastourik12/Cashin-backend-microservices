@@ -1,4 +1,4 @@
-package com.example.paymentmicroservice.dto;
+package com.example.clients.go.api;
 
 import lombok.Data;
 
