@@ -23,7 +23,7 @@ services:
       image: paypal-api-v1
       container_name: go-api
       build:
-        context: ./go-payment
+        context: ../go-payment
         dockerfile: Dockerfile
       ports:
         - "9090:9090"

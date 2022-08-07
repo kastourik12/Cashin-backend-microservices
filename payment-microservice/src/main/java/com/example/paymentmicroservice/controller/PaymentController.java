@@ -1,10 +1,11 @@
 package com.example.paymentmicroservice.controller;
 
-import com.example.clients.go.api.PayPalPaymentRequest;
 import com.example.paymentmicroservice.service.PaymentService;
+import com.kastourik12.clients.paymentAPI.PayPalPaymentRequest;
 import lombok.RequiredArgsConstructor;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/payment/")
 @RequiredArgsConstructor
-
 public class PaymentController {
     private Logger logger = LoggerFactory.getLogger(PaymentController.class);
     private final PaymentService paymentService;

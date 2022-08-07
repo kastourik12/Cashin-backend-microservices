@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/feign-client" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -8,13 +11,15 @@
         <option value="$PROJECT_DIR$/users-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/payment-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/users-service/pom.xml" />
-        <option value="$PROJECT_DIR$/clients/pom.xml" />
-        <option value="$PROJECT_DIR$/GATWAY/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-microservice/pom.xml" />
+        <option value="$PROJECT_DIR$/notification/pom.xml" />
+        <option value="$PROJECT_DIR$/apigateway/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/users-microservice/pom.xml" />
       </set>
     </option>
