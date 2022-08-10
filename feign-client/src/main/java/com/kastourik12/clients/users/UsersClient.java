@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "users",path = "api/v1/payment/")
+@FeignClient(value = "users",path = "api/v1/users/")
 public interface UsersClient {
-    @GetMapping("/validateToken")
-    ResponseEntity<UserDTO> validateToken(@RequestParam String token);
+    @GetMapping("/getBalance")
+    ResponseEntity<Double> getBalance(@RequestParam("userId") String userId);
 
 }

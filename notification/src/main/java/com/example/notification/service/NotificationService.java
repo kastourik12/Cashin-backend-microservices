@@ -14,10 +14,10 @@ public class NotificationService {
     public void sendNotification(NotificationRequest request) {
 
         Notification notification = new Notification();
-        notification.setMessage(request.getMessage());
-        notification.setType(request.getType());
-        notification.setStatus(request.getStatus());
-        notification.setUserId(request.getUserId());
+        notification.setMessage(request.message());
+        notification.setType(request.type());
+        notification.setStatus("unread");
+        notification.setUserId(request.userId());
         notificationRepository.save(notification);
         //TODO: implement sending notification
     }

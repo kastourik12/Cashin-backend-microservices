@@ -5,12 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class NotificationRequest {
-    private String message;
-    private String type;
-    private String status;
-    private Long userId;
+
+
+public record NotificationRequest(String message, String type,Long userId ){
 }

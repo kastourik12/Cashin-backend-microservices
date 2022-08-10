@@ -27,5 +27,16 @@ public class PaymentController {
         logger.info("inside Payment microserivce : executing created payment ");
         return this.paymentService.executePayment(paymentId,PayerID);
     }
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllPayments(@RequestHeader("X-auth-user-id") String userId){
+        logger.info("inside Payment microserivce : getting all payments ");
+        return this.paymentService.getAllPayments(userId);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPaymentById(@PathVariable String id,@RequestHeader("X-auth-user-id") String userId){
+        logger.info("inside Payment microserivce : getting payment by id ");
+        return this.paymentService.getPaymentById(id,userId);
+    }
 
 }
