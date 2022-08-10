@@ -25,9 +25,9 @@ spring:
     protocol: smtp
     host: smtp.mailtrap.io
     port: 2525
+
     username: a21f2f1308ac72
     password: c4a7231f34f319
-
 
 app:
   jwtSecret: SecretKey
@@ -35,13 +35,14 @@ app:
   jwtRefreshExpirationMs: 1200000
   paypal:
     mode: sandbox
-    clientID: Aa12HOfuR1vYgsltua0OIfgkMh3hYif4tA0vXserprIStvtphE6xvpQzwib0O9C2Ke--VeJI5_spFzod
-    secret: EI4D2w1F-_sDo_CCDvnvQKMafDJ1HTnwnV0Rn4JUIPi3KZUKgYacD4915Xv2Oo3LANAQc3ojHpvWvxNn
+    clientID: 
+    secret: 
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
 rabbitmq:
   exchanges:
     internal: users.exchange
@@ -49,3 +50,4 @@ rabbitmq:
     payment: payment.queue
   routing-keys:
     internal-payment: internal.payment.routing-key
+
