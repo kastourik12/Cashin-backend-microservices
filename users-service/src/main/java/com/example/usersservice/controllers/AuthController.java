@@ -23,13 +23,13 @@ public class AuthController {
 	private Logger logger = LoggerFactory.getLogger(AuthController.class);
 	@PostMapping ("/validateToken")
 	public ResponseEntity<UserDTO> validateToken(@RequestParam(value = "token") String token) {
-		logger.info("inside Auth microserivce : validating token");
+		logger.info("inside users service : validating token");
 		return authService.validateToken(token);
 	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		logger.info("inside Auth microserivce : authenticating user");
+		logger.info("inside users service : authenticating user");
 		return authService.authenticateUser(loginRequest);
 	}
 
