@@ -8,7 +8,7 @@ import com.kastourik12.amqp.RabbitMQMessageProducer;
 import com.kastourik12.clients.paymentAPI.PayPalPaymentRequest;
 import com.kastourik12.clients.paymentAPI.PaymentCreationResponse;
 import com.kastourik12.clients.paymentAPI.PaymentDTO;
-import com.kastourik12.clients.users.rabbitMQ.PaymentBalanceHandler;
+import com.kastourik12.clients.paymentAPI.PaymentBalanceHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -61,4 +62,18 @@ public class PaymentService {
         return ResponseEntity.ok("succes");
     }
 
+    public ResponseEntity<?> getAllPayments(String userId) {
+        List<Payment> payments = this.paymentRepository.findAllByUserId(userId);
+        return ResponseEntity.ok(payments);
+    }
+
+    public ResponseEntity<?> getPaymentById(String id, String userId) {
+        Payment payment = this.paymentRepository.findById(id).orElseThrow(() -> new CustomException("Payment not found"));
+        if(payment.getUserId().equals(userId)) {
+            return ResponseEntity.ok(payment);
+        }
+        else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

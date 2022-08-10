@@ -1,6 +1,7 @@
-package com.example.usersservice.common;
+package com.example.notification.service;
 
-import com.example.usersservice.exception.CustomException;
+import com.example.notification.exception.CustomException;
+import com.kastourik12.clients.notification.NotificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MailService {
 
     private final JavaMailSender mailSender;
-   
+
 
     @Async
     public void sendMail(NotificationEmail notificationEmail) {

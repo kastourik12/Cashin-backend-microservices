@@ -16,8 +16,13 @@ public class NotificationConfig {
     @Value("${rabbitmq.queues.notification}")
     private String notificationQueue;
 
+    @Value("${rabbitmq.queues.email}")
+    private String emailQueue;
+
     @Value("${rabbitmq.routing-keys.internal-notification}")
     private String internalNotificationRoutingKey;
+    @Value("${rabbitmq.routing-keys.internal-email}")
+    private String internalEmailRoutingKey;
 
     @Bean
     public TopicExchange internalTopicExchange() {
@@ -28,9 +33,19 @@ public class NotificationConfig {
     public Queue notificationQueue() {
         return new Queue(this.notificationQueue);
     }
+    @Bean
+    public Queue emailQueue() {
+        return new Queue(this.emailQueue);
+    }
+    @Bean
+    public Binding emailBiding(){
+        return BindingBuilder.bind(emailQueue())
+                .to(internalTopicExchange())
+                .with(this.internalEmailRoutingKey);
+    }
 
     @Bean
-    public Binding internalToNotificationBinding() {
+    public Binding NotificationBinding() {
         return BindingBuilder
                 .bind(notificationQueue())
                 .to(internalTopicExchange())

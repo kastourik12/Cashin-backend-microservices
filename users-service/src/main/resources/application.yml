@@ -13,41 +13,21 @@ spring:
   rabbitmq:
     addresses: localhost:5672
 
-
-      #redis:
-      # host: 127.0.0.1
-      #port: 6379
-      # cache:
-      #redis:
-      #time-to-live: 3600
-    #cache-null-values: false
-  mail:
-    protocol: smtp
-    host: smtp.mailtrap.io
-    port: 2525
-
-    username: a21f2f1308ac72
-    password: c4a7231f34f319
-
 app:
   jwtSecret: SecretKey
   jwtExpirationMs: 3600000
   jwtRefreshExpirationMs: 1200000
-  paypal:
-    mode: sandbox
-    clientID: 
-    secret: 
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-
 rabbitmq:
   exchanges:
-    internal: users.exchange
+    users: users.exchange
   queues:
     payment: payment.queue
+    transaction: transaction.queue
   routing-keys:
-    internal-payment: internal.payment.routing-key
-
+    users-payment: users.payment.routing-key
+    users-transaction: users.transaction.routing-key

@@ -1,6 +1,5 @@
 package com.example.usersservice.services;
 
-import com.example.usersservice.events.UserRegistrationEvent;
 import com.example.usersservice.exception.CustomException;
 import com.example.usersservice.models.CustomUser;
 import com.example.usersservice.models.ECurrency;
@@ -16,9 +15,11 @@ import com.example.usersservice.security.jwt.JwtUtils;
 import com.example.usersservice.security.refreshToken.RefreshTokenService;
 import com.example.usersservice.security.verficationKey.VerificationToken;
 import com.example.usersservice.security.verficationKey.VerificationTokenRepository;
+import com.example.usersservice.security.verficationKey.VerificationTokenService;
+import com.kastourik12.amqp.RabbitMQMessageProducer;
+import com.kastourik12.clients.notification.NotificationEmail;
 import com.kastourik12.clients.users.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,8 +38,8 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
-    private final ApplicationEventPublisher eventPublisher;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
+    private final VerificationTokenService verificationTokenService;
     private final CustomUserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
@@ -102,7 +103,15 @@ public class AuthService {
             roles.add(userRole);
             user.setRoles(roles);
         userRepository.save(user);
-        eventPublisher.publishEvent(new UserRegistrationEvent(user));
+        String token =verificationTokenService.generateVerificationToken(user.getUsername());
+        NotificationEmail notificationEmail = NotificationEmail.builder()
+                .subject("Verify your account")
+                .recipient(user.getEmail())
+                .body("To verify your account, please click on the link below:\n" +
+                        "http://localhost:8081/api/auth/accountVerification/"+ token)
+                .build();
+
+        rabbitMQMessageProducer.publish(notificationEmail, "notification.exchange","internal.email.routing-key");
         return ResponseEntity.ok(new MessageResponse("User registered successfully! you need to activate your account ! check your email"));
     }
 

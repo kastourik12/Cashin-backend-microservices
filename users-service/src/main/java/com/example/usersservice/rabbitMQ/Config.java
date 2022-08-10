@@ -10,27 +10,43 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class Config {
-    @Value("${rabbitmq.exchanges.internal}")
-    private String internalExchange;
+    @Value("${rabbitmq.exchanges.users}")
+    private String usersExchange;
     @Value("${rabbitmq.queues.payment}")
     private String paymentQueue;
-    @Value("${rabbitmq.routing-keys.internal-payment}")
-    private String internalPaymentRoutingKey;
+    @Value("${rabbitmq.queues.transaction}")
+    private String transactionQueue;
+    @Value("${rabbitmq.routing-keys.users-payment}")
+    private String usersPaymentRoutingKey;
+    @Value("${rabbitmq.routing-keys.users-transaction}")
+    private String usersTransactionRoutingKey;
+
     @Bean
     public TopicExchange internalTopicExchange() {
-        return new TopicExchange(this.internalExchange);
+        return new TopicExchange(this.usersExchange);
     }
 
     @Bean
-    public Queue notificationQueue() {
+    public Queue paymentQueue() {
         return new Queue(this.paymentQueue);
     }
 
+    @Bean Queue transactionQueue() {
+        return new Queue(this.transactionQueue);
+    }
     @Bean
-    public Binding internalToNotificationBinding() {
+    public Binding transactionBinding(){
+        return BindingBuilder.
+                bind(transactionQueue()).
+                to(internalTopicExchange()).
+                with(this.usersTransactionRoutingKey);
+    }
+
+    @Bean
+    public Binding usersPaymentBinding() {
         return BindingBuilder
-                .bind(notificationQueue())
+                .bind(paymentQueue())
                 .to(internalTopicExchange())
-                .with(this.internalPaymentRoutingKey);
+                .with(this.usersPaymentRoutingKey);
     }
 }
