@@ -4,26 +4,35 @@ import (
 	"github.com/gin-gonic/gin"
 	"kastouri/payment-api/requests"
 	"kastouri/payment-api/services"
+	"log"
 )
 
 type Paypal struct {
 	service *services.Paypal
+	logger  *log.Logger
 }
 
-func NewPaypalController(s *services.Paypal) *Paypal {
+func NewPaypalController(s *services.Paypal, l *log.Logger) *Paypal {
 	return &Paypal{
 		service: s,
+		logger:  l,
 	}
 }
 func (c *Paypal) CreatePayment(ctx *gin.Context) {
 	var paypalRequest requests.Paypal
-	ctx.BindJSON(&paypalRequest)
-	successLink, err := c.service.CreatePayment(paypalRequest)
+	err := ctx.BindJSON(&paypalRequest)
+	if err != nil {
+		return
+	}
+	userId := ctx.Query("userId")
+	response, err := c.service.CreatePayment(paypalRequest, userId)
 	if err != nil {
 		ctx.JSON(400, gin.H{"message": err.Error()})
 		return
 	}
-	ctx.JSON(300, successLink)
+	c.logger.Println(response)
+
+	ctx.JSON(200, response)
 }
 
 func (c *Paypal) ExecutePayment(ctx *gin.Context) {

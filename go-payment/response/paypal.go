@@ -1,8 +1,7 @@
 package response
 
 type Paypal struct {
-	PayerId   string `json:"payerId"`
-	PaymentId string `json:"paymentId"`
-	Amount    string `json:"amount"`
-	Currency  string `json:"currency"`
+	PaymentId   string `json:"paymentId"`
+	UserId      string `json:"userId"`
+	SuccessLink string `json:"successLink"`
 }

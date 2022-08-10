@@ -1,12 +1,8 @@
-server:
-  port: 8084
 spring:
-  application:
-    name: notification
   datasource:
-    password: password
     url: jdbc:postgresql://localhost:5432/notification
-    username: amigoscode
+    username: test
+    password: root
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -28,8 +24,10 @@ eureka:
 
 rabbitmq:
   exchanges:
-    internal: internal.exchange
+    internal: notification.exchange
   queues:
     notification: notification.queue
+    email: email.queue
   routing-keys:
     internal-notification: internal.notification.routing-key
+    internal-email: internal.email.routing-key

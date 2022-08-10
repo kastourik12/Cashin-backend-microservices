@@ -6,7 +6,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
-@SpringBootApplication
+@SpringBootApplication(
+        scanBasePackages = {
+                "com.example.paymentmicroservice",
+                "com.kastourik12.amqp",
+        }
+)
 @EnableDiscoveryClient
 @EnableFeignClients(
         basePackages = "com.kastourik12.clients"

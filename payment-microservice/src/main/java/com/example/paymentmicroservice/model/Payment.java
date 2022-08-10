@@ -20,13 +20,10 @@ import java.util.Date;
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String  amount;
     @JsonIgnore
     private String payerId;
-    @JsonIgnore
-    private String paymentId;
     @CreationTimestamp
     private Instant createdAt;
     @JsonIgnore

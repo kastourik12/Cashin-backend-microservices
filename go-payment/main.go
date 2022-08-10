@@ -34,8 +34,9 @@ func init() {
 	if err != nil {
 		log.Println("can get access token")
 	}
+
 	paypalService = services.NewPaypalService(client, logger)
-	paypalController = controllers.NewPaypalController(paypalService)
+	paypalController = controllers.NewPaypalController(paypalService, logger)
 
 }
 func main() {
