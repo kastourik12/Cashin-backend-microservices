@@ -16,6 +16,7 @@ import com.example.usersservice.security.jwt.JwtUtils;
 import com.example.usersservice.security.refreshToken.RefreshTokenService;
 import com.example.usersservice.security.verficationKey.VerificationToken;
 import com.example.usersservice.security.verficationKey.VerificationTokenRepository;
+import com.kastourik12.clients.users.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -91,8 +93,8 @@ public class AuthService {
                 .phone(signupRequest.getPhoneNumber())
                 .enabled(false)
                 .defaultCurrency(ECurrency.USD)
-                .credit(0)
-                .roles(new HashSet<Role>())
+                .credit(0.0)
+                .roles(new HashSet<>())
                 .build();
             Set<Role> roles = new HashSet<>();
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -135,6 +137,17 @@ public class AuthService {
         return ResponseEntity.ok(new MessageResponse("User signed out successfully!"));
     }
 
+    public ResponseEntity<UserDTO> validateToken(String token) {
+        if(jwtUtils.validateJwtToken(token)){
+            String username = jwtUtils.getUsernameFromJwtToken(token);
+            Optional<CustomUser> user = userRepository.findByUsername(username);
+            if (user.isPresent()){
+               UserDTO userDTO = new UserDTO(user.get().getId(),user.get().getUsername());
+                return ResponseEntity.ok(userDTO);
+            }
+        }
+        throw new CustomException("Invalid Token");
+    }
 }
 
 

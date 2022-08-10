@@ -1,0 +1,37 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  zipkin:
+    base-url: http://localhost:9411
+  cloud:
+    gateway:
+      routes:
+      - id: users
+        uri: lb://users
+        predicates:
+          - Path=/api/auth/*
+          - Method=GET,POST,PUT,DELETE
+
+      - id: payment
+        uri: lb://payment
+        predicates:
+          - Path=/api/v1/payment/*
+          - Method=GET,POST,PUT,DELETE
+        filters:
+          - AuthFilter
+
+      - id: transaction
+        uri: lb://transaction
+        predicates:
+          - Path=/api/v1/transaction/*
+          - Method=GET,POST,PUT,DELETE
+        filters:
+          - AuthFilter
+client:
+  instancesUri:
+    users: http://localhost:8081/api/auth/
+
+
+

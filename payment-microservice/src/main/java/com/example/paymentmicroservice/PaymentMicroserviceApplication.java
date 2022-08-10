@@ -2,14 +2,25 @@ package com.example.paymentmicroservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
-@EnableEurekaClient
+
+@SpringBootApplication(
+        scanBasePackages = {
+                "com.example.paymentmicroservice",
+                "com.kastourik12.amqp",
+        }
+)
+@EnableDiscoveryClient
+@EnableFeignClients(
+        basePackages = "com.kastourik12.clients"
+)
 public class PaymentMicroserviceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PaymentMicroserviceApplication.class, args);
     }
+
 
 }

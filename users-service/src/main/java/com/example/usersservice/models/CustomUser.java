@@ -40,12 +40,12 @@ public class CustomUser {
     private String lastName;
     @NotBlank
     private String phone;
-    private Integer credit;
+
+    private Double credit;
     @Nullable
     private String imageURL;
     @Enumerated(EnumType.STRING)
     private ECurrency defaultCurrency;
-
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp

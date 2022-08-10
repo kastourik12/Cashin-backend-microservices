@@ -1,0 +1,4 @@
+/home/kastouri/Desktop/Cashin-backend-microservices/feign-client/src/main/java/com/kastourik12/clients/paymentAPI/PayPalPaymentRequest.java
+/home/kastouri/Desktop/Cashin-backend-microservices/feign-client/src/main/java/com/kastourik12/clients/notification/NotificationRequest.java
+/home/kastouri/Desktop/Cashin-backend-microservices/feign-client/src/main/java/com/kastourik12/clients/paymentAPI/PaymentDTO.java
+/home/kastouri/Desktop/Cashin-backend-microservices/feign-client/src/main/java/com/kastourik12/clients/paymentAPI/GoApiClient.java

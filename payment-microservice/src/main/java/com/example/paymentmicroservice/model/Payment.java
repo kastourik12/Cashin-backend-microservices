@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,13 +20,10 @@ import java.time.Instant;
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String  amount;
     @JsonIgnore
     private String payerId;
-    @JsonIgnore
-    private String paymentId;
     @CreationTimestamp
     private Instant createdAt;
     @JsonIgnore
