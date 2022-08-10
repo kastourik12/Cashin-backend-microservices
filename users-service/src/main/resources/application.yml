@@ -12,22 +12,11 @@ spring:
     base-url: http://localhost:9411
   rabbitmq:
     addresses: localhost:5672
-      #redis:
-      # host: 127.0.0.1
-      #port: 6379
-      # cache:
-      #redis:
-      #time-to-live: 3600
-    #cache-null-values: false
 
 app:
   jwtSecret: SecretKey
   jwtExpirationMs: 3600000
   jwtRefreshExpirationMs: 1200000
-  paypal:
-    mode: sandbox
-    clientID: Aa12HOfuR1vYgsltua0OIfgkMh3hYif4tA0vXserprIStvtphE6xvpQzwib0O9C2Ke--VeJI5_spFzod
-    secret: EI4D2w1F-_sDo_CCDvnvQKMafDJ1HTnwnV0Rn4JUIPi3KZUKgYacD4915Xv2Oo3LANAQc3ojHpvWvxNn
 
 eureka:
   client:
