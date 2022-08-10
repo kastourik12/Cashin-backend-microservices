@@ -16,15 +16,15 @@ public class TransactionService {
     private final RabbitMQMessageProducer rabbitMqMessageProducer;
     private final TransactionRepository transactionRepository;
     private final UsersClient usersClient;
-    public ResponseEntity<?> send(TransactionRequest transactionRequest) {
-        Double senderBalance = usersClient.getBalance(transactionRequest.getSender()).getBody();
+    public ResponseEntity<?> send(TransactionRequest transactionRequest,String userId) {
+        Double senderBalance = usersClient.getBalance(userId).getBody();
         if(senderBalance < transactionRequest.getAmount()) {
             return ResponseEntity.badRequest().body("Not enough money");
         }
         else {
             Transaction transaction = new Transaction();
             transaction.setAmount(transactionRequest.getAmount());
-            transaction.setSender(transactionRequest.getSender());
+            transaction.setSender(userId);
             transaction.setReceiver(transactionRequest.getReceiver());
             transactionRepository.save(transaction);
             TransactionBalanceHandler transactionBalanceHandler = new TransactionBalanceHandler(
@@ -32,7 +32,6 @@ public class TransactionService {
                     transaction.getSender(),
                     transaction.getAmount(),
                     transaction.getCurrency());
-
             rabbitMqMessageProducer.publish(transactionBalanceHandler,"users.exchange","users.transaction.routing-key");
             return ResponseEntity.ok().body("Transaction successful");
         }

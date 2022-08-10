@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class TransactionRequest {
-    private String sender;
 
     private String receiver;
 
