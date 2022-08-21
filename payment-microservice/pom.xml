@@ -11,10 +11,16 @@
     <groupId>com.example</groupId>
     <artifactId>payment-microservice</artifactId>
     <name>payment-microservice</name>
+    <packaging>jar</packaging>
     <description>payment-microservice</description>
-    <properties>
-        <java.version>18</java.version>
-    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -11,24 +11,48 @@ spring:
       - id: users
         uri: lb://users
         predicates:
-          - Path=/api/auth/*
-          - Method=GET,POST,PUT,DELETE
-
+          - Path=/auth/*
+          - Method=GET,POST,PUT,DELETE,OPTIONS
       - id: payment
         uri: lb://payment
         predicates:
-          - Path=/api/v1/payment/*
-          - Method=GET,POST,PUT,DELETE
+          - Path=/payment/*
+          - Method=GET,POST,PUT,DELETE,OPTIONS
         filters:
           - AuthFilter
 
       - id: transaction
         uri: lb://transaction
         predicates:
-          - Path=/api/v1/transaction/*
-          - Method=GET,POST,PUT,DELETE
+          - Path=/transaction/*
+          - Method=GET,POST,PUT,DELETE,OPTIONS
         filters:
           - AuthFilter
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders:
+              - x-requested-with
+              - Authorization
+              - Content-Type
+              - Content-Length
+              - Authorization
+              - credential
+              - X-XSRF-TOKEN
+              - Acccept
+              - Referer
+              - refreshToken
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+
+
+
 client:
   instancesUri:
     users: http://localhost:8081/api/auth/

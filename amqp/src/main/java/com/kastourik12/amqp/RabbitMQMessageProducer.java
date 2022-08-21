@@ -1,6 +1,5 @@
 package com.kastourik12.amqp;
 
-import com.kastourik12.clients.paymentAPI.PaymentDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;

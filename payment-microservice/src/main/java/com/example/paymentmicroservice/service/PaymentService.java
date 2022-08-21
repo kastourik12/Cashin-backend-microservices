@@ -5,6 +5,7 @@ import com.example.paymentmicroservice.exception.CustomException;
 import com.example.paymentmicroservice.model.Payment;
 import com.example.paymentmicroservice.repository.PaymentRepository;
 import com.kastourik12.amqp.RabbitMQMessageProducer;
+import com.kastourik12.clients.notification.NotificationRequest;
 import com.kastourik12.clients.paymentAPI.PayPalPaymentRequest;
 import com.kastourik12.clients.paymentAPI.PaymentCreationResponse;
 import com.kastourik12.clients.paymentAPI.PaymentDTO;
@@ -51,14 +52,34 @@ public class PaymentService {
         }
     }
     public ResponseEntity<?> executePayment(String paymentId,String PayerID) {
-        PaymentDTO paymentResponse = restTemplate.getForObject("http://"+apiHost+":"+apiPort+"/v1/paypal/execute?paymentId="+paymentId+"&PayerID="+PayerID, PaymentDTO.class);
-        Payment payment = this.paymentRepository.findById(paymentResponse.getPaymentId()).orElseThrow(() -> new CustomException("Payment not found"));
+        PaymentDTO paymentResponse = restTemplate.getForObject(
+                "http://"+apiHost+":"+apiPort+"/v1/paypal/execute?paymentId="+paymentId+"&PayerID="+PayerID,
+                PaymentDTO.class);
+        Payment payment = this.paymentRepository.findById(paymentResponse.getPaymentId())
+                .orElseThrow(
+                        () -> new CustomException("Payment not found")
+                );
         payment.setPayerId(paymentResponse.getPayerId());
         payment.setAmount(paymentResponse.getAmount());
         payment.setCreatedAt(Instant.now());
         this.paymentRepository.save(payment);
-        PaymentBalanceHandler paymentBalanceHandler = new PaymentBalanceHandler(payment.getUserId(),Double.parseDouble(paymentResponse.getAmount()),paymentResponse.getCurrency());
-        rabbitMQMessageProducer.publish(paymentBalanceHandler,"users.exchange","internal.payment.routing-key");
+        PaymentBalanceHandler paymentBalanceHandler = new PaymentBalanceHandler(
+                payment.getUserId(),
+                Double.parseDouble(paymentResponse.getAmount()),
+                paymentResponse.getCurrency());
+        rabbitMQMessageProducer.publish(
+                paymentBalanceHandler,
+                "users.exchange",
+                "internal.payment.routing-key");
+        NotificationRequest notificationRequest = new NotificationRequest(
+                payment.getUserId().toString(),
+                "Payment completed",
+                payment.getUserId().toString()
+        );
+        rabbitMQMessageProducer.publish(
+                notificationRequest,
+                "notification.exchange",
+                "internal.notification.routing-key");
         return ResponseEntity.ok("succes");
     }
 

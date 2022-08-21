@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
 	private final AuthService authService;
 	private Logger logger = LoggerFactory.getLogger(AuthController.class);
 	@PostMapping ("/validateToken")
@@ -50,9 +49,5 @@ public class AuthController {
 		return authService.refreshAndGetAuthenticationToken(token);
 	}
 
-	@PostMapping("/signout")
-	public ResponseEntity<?> signOut(@RequestBody String token) {
 
-		return authService.signOut(token);
-	}
 }
