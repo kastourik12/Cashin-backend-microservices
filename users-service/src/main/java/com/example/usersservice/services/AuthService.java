@@ -110,7 +110,6 @@ public class AuthService {
                 .body("To verify your account, please click on the link below:\n" +
                         "http://localhost:8081/api/auth/accountVerification/"+ token)
                 .build();
-
         rabbitMQMessageProducer.publish(notificationEmail, "notification.exchange","internal.email.routing-key");
         return ResponseEntity.ok(new MessageResponse("User registered successfully! you need to activate your account ! check your email"));
     }
@@ -138,12 +137,6 @@ public class AuthService {
         return ResponseEntity.ok(response);
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Invalid Token"));
-    }
-
-    public ResponseEntity<?> signOut(String token) {
-        String username = refreshTokenService.getUsernameFromRefreshToken(token);
-        refreshTokenService.removeAllTokensByuser(username);
-        return ResponseEntity.ok(new MessageResponse("User signed out successfully!"));
     }
 
     public ResponseEntity<UserDTO> validateToken(String token) {

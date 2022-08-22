@@ -12,9 +12,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>apigateway</name>
     <description>apigateway</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -70,5 +69,18 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>build-docker-image</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

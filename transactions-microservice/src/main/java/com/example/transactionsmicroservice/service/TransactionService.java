@@ -18,6 +18,7 @@ public class TransactionService {
     private final UsersClient usersClient;
     public ResponseEntity<?> send(TransactionRequest transactionRequest,String userId) {
         Double senderBalance = usersClient.getBalance(userId).getBody();
+        if(senderBalance != null) {
         if(senderBalance < transactionRequest.getAmount()) {
             return ResponseEntity.badRequest().body("Not enough money");
         }
@@ -35,5 +36,7 @@ public class TransactionService {
             rabbitMqMessageProducer.publish(transactionBalanceHandler,"users.exchange","users.transaction.routing-key");
             return ResponseEntity.ok().body("Transaction successful");
         }
+    }
+        return ResponseEntity.badRequest().body("User not found");
     }
 }

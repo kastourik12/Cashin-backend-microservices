@@ -1,24 +1,18 @@
 package com.example.notification.model;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import nonapi.io.github.classgraph.json.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity(name = "notification")
-@AllArgsConstructor
-@NoArgsConstructor
+@Document
 @Data
+
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String message;
     private String type;
     private String status;
-    private Long userId;
+    private String userId;
 }

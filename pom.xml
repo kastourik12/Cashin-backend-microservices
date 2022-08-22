@@ -20,6 +20,7 @@
 
   </modules>
 
+
   <name>cashin-backend</name>
 
   <url>https://github.com/kastourik12/Cashin-backend-microservices.git</url>
@@ -28,13 +29,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>18</maven.compiler.source>
     <maven.compiler.target>18</maven.compiler.target>
+    <image>kastourik12/${project.artifactId}:${project.version}</image>
   </properties>
 
-
     <dependencyManagement>
-
       <dependencies>
-
         <dependency>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-dependencies</artifactId>
@@ -81,55 +80,59 @@
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.1.0</version>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>springdoclet-maven-plugin</artifactId>
+          <version>2.5.7</version>
           <executions>
             <execution>
-              <id>enforce-banned-dependencies</id>
               <goals>
-                <goal>enforce</goal>
+                <goal>repackage</goal>
               </goals>
-              <configuration>
-                <rules>
-                  <bannedDependencies>
-                    <excludes>
-                      <exclude>*:servlet-api:2.5</exclude>
-                    </excludes>
-                  </bannedDependencies>
-                </rules>
-                <fail>true</fail>
-              </configuration>
             </execution>
           </executions>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <groupId>com.google.cloud.tools</groupId>
+          <artifactId>jib-maven-plugin</artifactId>
+          <version>3.1.4</version>
           <configuration>
-            <outputDirectory>${dir}</outputDirectory>
+            <from>
+              <image>eclipse-temurin:17</image>
+                <platforms>
+                  <platform>
+                    <architecture>amd64</architecture>
+                    <os>linux</os>
+                  </platform>
+                </platforms>
+
+            </from>
+            <to>
+              <tags>
+                <tag>latest</tag>
+              </tags>
+            </to>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
           <executions>
             <execution>
-              <id>copy-dependencies</id>
-              <phase>prepare-package</phase>
+              <phase>package</phase>
               <goals>
-                <goal>copy-dependencies</goal>
+                <goal>build</goal>
               </goals>
-              <configuration>
-                <outputDirectory>
-                  build/libs
-                </outputDirectory>
-              </configuration>
             </execution>
           </executions>
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>18</source>
+          <target>18</target>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>

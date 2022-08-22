@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/netlify/PayPal-Go-SDK"
 	"kastouri/payment-api/controllers"
 	"kastouri/payment-api/services"
@@ -23,7 +22,6 @@ var (
 
 func init() {
 	logger = log.Default()
-	godotenv.Load(".env")
 	ctx = context.TODO()
 	server = gin.Default()
 	client, err := paypalsdk.NewClient(os.Getenv("PAYPAL_CLIENT_ID"), os.Getenv("PAYPAL_CLIENT_SECRET"), paypalsdk.APIBaseSandBox)
