@@ -1,6 +1,96 @@
 version: '3.3'
 services:
-  zippkin:
+  go-api:
+    image: kastourik12/go-api:latest
+    container_name: go-api
+    environment:
+      - PAYPAL_CLIENT_ID=
+      - PAYPAL_CLIENT_SECRET=
+    networks:
+      - backend
+  eureka:
+    image: kastourik12/eureka-server:latest
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    depends_on:
+      - zipkin
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+        - backend
+  apigateway:
+    image: kastourik12/apigateway:latest
+    container_name: apigateway
+    ports:
+      - "8222:8222"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka
+      - zipkin
+    networks:
+        - backend
+
+  users:
+    image: kastourik12/users:latest
+    container_name: users
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka
+      - zipkin
+      - rabbitmq
+      - postgres
+    networks:
+        - backend
+        - postgres
+  payment:
+    image: kastourik12/payment:latest
+    container_name: payment
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka
+      - zipkin
+      - rabbitmq
+      - postgres
+    networks:
+        - backend
+        - postgres
+  transaction:
+    image: kastourik12/transaction:latest
+    container_name: transaction
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka
+      - zipkin
+      - rabbitmq
+      - postgres
+    networks:
+        - backend
+        - postgres
+  notification:
+    image: kastourik12/notification:latest
+    container_name: notification
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka
+      - zipkin
+      - rabbitmq
+    networks:
+        - backend
+  zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
@@ -11,3 +101,37 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  postgresdb:
+    image: postgres:13.1-alpine
+    container_name: postgres
+    ports:
+      - "5432:5431"
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - PGDATA=/data/postgres
+    volumes:
+      - postgres:/data/postgres
+  pgadmin:
+      container_name: pgadmin-payments
+      image: dpage/pgadmin4
+      environment:
+        PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+        PGADMIN_DEFAULT_PASSWORD: admin
+        PGADMIN_CONFIG_SERVER_MODE: 'False'
+      volumes:
+        - pgadmin:/var/lib/pgadmin
+      ports:
+        - "82:80"
+      restart: unless-stopped
+      logging:
+        driver: "none"
+
+volumes:
+    postgres:
+    pgadmin:
+networks:
+  postgres:
+    driver: bridge
+  backend:
+    driver: bridge
