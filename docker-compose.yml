@@ -4,8 +4,8 @@ services:
     image: kastourik12/go-api:latest
     container_name: go-api
     environment:
-      - PAYPAL_CLIENT_ID=
-      - PAYPAL_CLIENT_SECRET=
+      - PAYPAL_CLIENT_ID=AXqcPY0tQ3J6zNtjaGXyJnuUd5E2MbBEh_6CD1xbCcTK9_IDHKHSLYPWHIbmAwAWQ13-B6Wu0Ksigcry
+      - PAYPAL_CLIENT_SECRET=ECGQZJ1aK-dSCgHKFx2kl2oyizD4ZuOtTd8IWVPVa3n9YgJWHAZ35TO5VYnQHjc6faG6bnXTHklvzk7M
     networks:
       - backend
   eureka:
@@ -19,6 +19,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
         - backend
+    restart: on-failure
   apigateway:
     image: kastourik12/apigateway:latest
     container_name: apigateway
@@ -31,14 +32,16 @@ services:
       - zipkin
     networks:
         - backend
+    restart: on-failure
 
   users:
-    image: kastourik12/users:latest
+    image: kastourik12/users-service:latest
     container_name: users
     ports:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - POSTGRES_DB=test
     depends_on:
       - eureka
       - zipkin
@@ -47,13 +50,15 @@ services:
     networks:
         - backend
         - postgres
+    restart: on-failure
   payment:
-    image: kastourik12/payment:latest
+    image: kastourik12/payment-microservice:latest
     container_name: payment
     ports:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - POSTGRES_DB=test
     depends_on:
       - eureka
       - zipkin
@@ -62,13 +67,15 @@ services:
     networks:
         - backend
         - postgres
+    restart: on-failure
   transaction:
-    image: kastourik12/transaction:latest
+    image: kastourik12/transactions-microservice:latest
     container_name: transaction
     ports:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - POSTGRES_DB=test
     depends_on:
       - eureka
       - zipkin
@@ -77,6 +84,7 @@ services:
     networks:
         - backend
         - postgres
+    restart: on-failure
   notification:
     image: kastourik12/notification:latest
     container_name: notification
@@ -84,6 +92,7 @@ services:
       - "8084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+
     depends_on:
       - eureka
       - zipkin
@@ -95,23 +104,30 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+    networks:
+        - backend
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
-  postgresdb:
+    networks:
+        - backend
+  postgres:
     image: postgres:13.1-alpine
-    container_name: postgres
+    container_name: postgresdb
     ports:
       - "5432:5431"
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
       - PGDATA=/data/postgres
+      - POSTGRES_DB=test
     volumes:
       - postgres:/data/postgres
+    networks:
+        - postgres
   pgadmin:
       container_name: pgadmin-payments
       image: dpage/pgadmin4
@@ -126,6 +142,8 @@ services:
       restart: unless-stopped
       logging:
         driver: "none"
+      networks:
+        - postgres
 
 volumes:
     postgres:

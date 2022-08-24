@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:postgres}:${POSTGRES_PORT:5432}/${POSTGRES_DB:payments}
-    username: ${POSTGRES_USER:test}
+    username: ${POSTGRES_USER:root}
     password: ${POSTGRES_PASSWORD:root}
   jpa:
     hibernate:
