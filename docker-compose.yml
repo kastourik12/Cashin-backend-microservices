@@ -4,8 +4,8 @@ services:
     image: kastourik12/go-api:latest
     container_name: go-api
     environment:
-      - PAYPAL_CLIENT_ID=AXqcPY0tQ3J6zNtjaGXyJnuUd5E2MbBEh_6CD1xbCcTK9_IDHKHSLYPWHIbmAwAWQ13
-      - PAYPAL_CLIENT_SECRET=ECGQZJ1aK-dSCgHKFx2kl2oyizD4ZuOtTd8IWVPVa3n9YgJWHAZ35TO5VYnQHjc6faG6bnXTHklvzk7M
+      - PAYPAL_CLIENT_ID=
+      - PAYPAL_CLIENT_SECRET=
     networks:
       - backend
   eureka:
@@ -104,7 +104,7 @@ services:
       - "8084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - MONGODB_URI=mongodb+srv://root:root@cluster0.rz1qx1b.mongodb.net/?retryWrites=true&w=majority
+      - MONGODB_URI=
     depends_on:
       - eureka
       - zipkin
