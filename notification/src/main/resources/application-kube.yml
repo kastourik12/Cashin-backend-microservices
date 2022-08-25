@@ -4,22 +4,22 @@ spring:
   rabbitmq:
     addresses: rabbitmq:5672
   mail:
-      protocol: smtp
-      host: smtp.mailtrap.io
-      port: 2525
-      username: a21f2f1308ac72
-      password: c4a7231f34f319
+    protocol: smtp
+    host: smtp.mailtrap.io
+    port: 2525
+    username: a21f2f1308ac72
+    password: c4a7231f34f319
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb+srv://test:}
+      uri: mongodb+srv://test:test@cluster0.7btvtvu.mongodb.net/?retryWrites=true&w=majority
       database: notification
 eureka:
-
   client:
     service-url:
       defaultZone: http://eureka:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+    enabled: false
 rabbitmq:
   exchanges:
     internal: notification.exchange

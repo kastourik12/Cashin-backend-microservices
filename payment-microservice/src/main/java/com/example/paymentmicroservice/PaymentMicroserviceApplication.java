@@ -13,9 +13,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
         }
 )
 @EnableDiscoveryClient
-@EnableFeignClients(
-        basePackages = "com.kastourik12.clients"
-)
 public class PaymentMicroserviceApplication {
 
     public static void main(String[] args) {

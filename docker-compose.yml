@@ -4,8 +4,8 @@ services:
     image: kastourik12/go-api:latest
     container_name: go-api
     environment:
-      - PAYPAL_CLIENT_ID=
-      - PAYPAL_CLIENT_SECRET=
+      - PAYPAL_CLIENT_ID=AXqcPY0tQ3J6zNtjaGXyJnuUd5E2MbBEh_6CD1xbCcTK9_IDHKHSLYPWHIbmAwAWQ13
+      - PAYPAL_CLIENT_SECRET=ECGQZJ1aK-dSCgHKFx2kl2oyizD4ZuOtTd8IWVPVa3n9YgJWHAZ35TO5VYnQHjc6faG6bnXTHklvzk7M
     networks:
       - backend
   eureka:
@@ -41,7 +41,11 @@ services:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - POSTGRES_DB=test
+      - POSTGRES_DB=users
+      - POSTGRES_HOST=postgresdb
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
     depends_on:
       - eureka
       - zipkin
@@ -57,8 +61,12 @@ services:
     ports:
       - "8082:8082"
     environment:
+      - POSTGRES_DB=payments
+      - POSTGRES_HOST=postgresdb
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
       - SPRING_PROFILES_ACTIVE=docker
-      - POSTGRES_DB=test
     depends_on:
       - eureka
       - zipkin
@@ -75,7 +83,11 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - POSTGRES_DB=test
+      - POSTGRES_DB=transactions
+      - POSTGRES_HOST=postgresdb
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
     depends_on:
       - eureka
       - zipkin
@@ -92,7 +104,7 @@ services:
       - "8084:8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-
+      - MONGODB_URI=mongodb+srv://root:root@cluster0.rz1qx1b.mongodb.net/?retryWrites=true&w=majority
     depends_on:
       - eureka
       - zipkin
@@ -123,7 +135,6 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
       - PGDATA=/data/postgres
-      - POSTGRES_DB=test
     volumes:
       - postgres:/data/postgres
     networks:

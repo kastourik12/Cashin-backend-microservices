@@ -2,32 +2,33 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://eureka:8761/eureka/
+    enabled: false
 spring:
   zipkin:
     base-url: http://zipkin:9411
   cloud:
     gateway:
       routes:
-      - id: users
-        uri: lb://users
-        predicates:
-          - Path=/auth/*
-          - Method=GET,POST,PUT,DELETE,OPTIONS
-      - id: payment
-        uri: lb://payment
-        predicates:
-          - Path=/payment/*
-          - Method=GET,POST,PUT,DELETE,OPTIONS
-        filters:
-          - AuthFilter
+        - id: users
+          uri: http://users
+          predicates:
+            - Path=/auth/*
+            - Method=GET,POST,PUT,DELETE,OPTIONS
+        - id: payment
+          uri: http://payment
+          predicates:
+            - Path=/payment/*
+            - Method=GET,POST,PUT,DELETE,OPTIONS
+          filters:
+            - AuthFilter
 
-      - id: transaction
-        uri: lb://transaction
-        predicates:
-          - Path=/transaction/*
-          - Method=GET,POST,PUT,DELETE,OPTIONS
-        filters:
-          - AuthFilter
+        - id: transaction
+          uri: http://transaction
+          predicates:
+            - Path=/transaction/*
+            - Method=GET,POST,PUT,DELETE,OPTIONS
+          filters:
+            - AuthFilter
       globalcors:
         corsConfigurations:
           '[/**]':

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:postgresdb}:${POSTGRES_PORT:5432}/${POSTGRES_DB:payments}
+    url: jdbc:postgresql://${POSTGRES_HOST:postgres}:${POSTGRES_PORT:5432}/${POSTGRES_DB:payments}
     username: ${POSTGRES_USER:root}
     password: ${POSTGRES_PASSWORD:root}
   jpa:
@@ -15,7 +15,7 @@ go:
     host: ${GO_API_HOST:localhost}
     port: ${GO_API_PORT:9090}
 eureka:
+  service-url:
+    defaultZone: http://eureka:8761/eureka
   client:
-    service-url:
-      defaultZone: http://eureka:8761/eureka
     enabled: false

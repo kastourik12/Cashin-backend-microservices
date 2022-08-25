@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "users",path = "api/v1/users/")
+@FeignClient(
+        name = "users-service",
+        url = "http://users/",
+        path = "api/v1/users")
 public interface UsersClient {
     @GetMapping("/getBalance")
     ResponseEntity<Double> getBalance(@RequestParam("userId") String userId);

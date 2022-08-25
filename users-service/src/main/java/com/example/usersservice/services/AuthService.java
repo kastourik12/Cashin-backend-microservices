@@ -83,7 +83,6 @@ public class AuthService {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Phone is already in use!"));
-
         }
         CustomUser user = CustomUser.builder()
                 .username(signupRequest.getUsername())
