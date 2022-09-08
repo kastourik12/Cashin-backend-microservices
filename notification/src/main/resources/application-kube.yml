@@ -11,7 +11,7 @@ spring:
     password: c4a7231f34f319
   data:
     mongodb:
-      uri: mongodb+srv://test:test@cluster0.7btvtvu.mongodb.net/?retryWrites=true&w=majority
+      uri: ${MONGODB_URI:mongodb+srv://test:}
       database: notification
 eureka:
   client:

@@ -40,7 +40,7 @@ public class CustomUser {
     private String lastName;
     @NotBlank
     private String phone;
-
+    @Nullable
     private Double credit;
     @Nullable
     private String imageURL;

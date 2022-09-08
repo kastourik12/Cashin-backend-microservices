@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
-    private Logger logger = LoggerFactory.getLogger(TransactionController.class);
-    @PostMapping("/send")
-    public ResponseEntity<?> send(@RequestBody TransactionRequest transaction,@RequestHeader("X-auth-user-id") String userId) {
-        logger.info("inside transactions service : send method");
-        return transactionService.send(transaction,userId);
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTransactions(@RequestHeader("x-auth-user-id") String userId) {
+        return ResponseEntity.ok(transactionService.getAllTransactions(userId));
     }
+
+
 
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder
 public class JwtResponse {
 	private String authenticationToken;
-	private String refreshToken ;
+	private String refreshToken;
 	private Date expiresAt;
 	private String username;
 

@@ -24,7 +24,7 @@ func (s *Paypal) CreatePayment(request requests.Paypal, userId string) (response
 		Total:    request.Total,
 		Currency: request.Currency,
 	}
-	payment, err := s.client.CreateDirectPaypalPayment(amount, "http://localhost:8082/api/v1/payment/execute", "http://exemple.com/cancel", "")
+	payment, err := s.client.CreateDirectPaypalPayment(amount, "http://localhost:8082/payment/execute", "http://exemple.com/cancel", "")
 	if err != nil {
 		s.logger.Println(err)
 	}

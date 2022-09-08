@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 )
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.kastourik12.clients")
-@PropertySource("classpath:clients-${spring.profiles.active}.properties")
 public class TransactionsMicroserviceApplication {
 
     public static void main(String[] args) {

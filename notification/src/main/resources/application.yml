@@ -12,7 +12,7 @@ spring:
       password: c4a7231f34f319
   data:
     mongodb:
-      uri: mongodb+srv://test:test@cluster0.7btvtvu.mongodb.net/?retryWrites=true&w=majority
+      uri: mongodb+srv://root:root@cluster0.gwqxqob.mongodb.net/?retryWrites=true&w=majority
       database: notification
 eureka:
   client:
@@ -24,10 +24,10 @@ eureka:
 
 rabbitmq:
   exchanges:
-    internal: notification.exchange
+    notification: notification.exchange
   queues:
     notification: notification.queue
     email: email.queue
   routing-keys:
-    internal-notification: internal.notification.routing-key
-    internal-email: internal.email.routing-key
+    notification: notification.routing-key
+    email: email.routing-key

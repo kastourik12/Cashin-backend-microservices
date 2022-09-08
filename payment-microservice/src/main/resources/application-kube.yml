@@ -12,8 +12,7 @@ spring:
     base-url: http://zipkin:9411
 go:
   api:
-    host: ${GO_API_HOST:localhost}
-    port: ${GO_API_PORT:9090}
+    host: ${GO_API_HOST:localhost:9090}
 eureka:
   service-url:
     defaultZone: http://eureka:8761/eureka

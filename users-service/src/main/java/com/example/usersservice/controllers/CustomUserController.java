@@ -1,7 +1,7 @@
 package com.example.usersservice.controllers;
 
-import com.example.usersservice.repositories.CustomUserRepository;
 import com.example.usersservice.services.CustomUserService;
+import com.kastourik12.clients.transactions.TransactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class CustomUserController {
     private final CustomUserService customUserService;
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
-
-    @GetMapping("/getBalance")
-   public ResponseEntity<Double> getBalance(@RequestParam String userId) {
+    @GetMapping("/transactionRequest")
+    public ResponseEntity<?> getSenderAndReceiver(@RequestBody TransactionRequest transactionRequest) {
         logger.info("inside users service: getting balance");
-        return this.customUserService.getBalance(userId);
+        return this.customUserService.UpdateCreditAndPublishTransaction(transactionRequest);
     }
+
+
 
 }

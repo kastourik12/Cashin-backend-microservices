@@ -1,6 +1,7 @@
 package com.example.usersservice.rabbitMQ;
 
 import com.example.usersservice.controllers.AuthController;
+import com.example.usersservice.models.CustomUser;
 import com.example.usersservice.services.CustomUserService;
 import com.kastourik12.clients.paymentAPI.PaymentBalanceHandler;
 import com.kastourik12.clients.transactions.TransactionBalanceHandler;
@@ -18,15 +19,11 @@ public class UserClientConsumer {
     @RabbitListener(queues = "${rabbitmq.queues.payment}")
     public void consumer(PaymentBalanceHandler payment) {
         logger.info("Consumed {} from queue", payment);
-        customUserService.updateCredit(payment.userId(),payment.amount());
+        CustomUser customUser = customUserService.getUser(payment.userId());
+        customUserService.updateCredit(customUser,payment.amount());
     }
 
-    @RabbitListener(queues = "${rabbitmq.queues.transaction}")
-    public void consumer(TransactionBalanceHandler transaction) {
-        logger.info("Consumed {} from queue", transaction);
-        customUserService.updateCredit(Long.parseLong(transaction.sender()),-transaction.amount());
-        customUserService.updateCredit(Long.parseLong(transaction.receiver()),transaction.amount());
-    }
+
 
 
 }

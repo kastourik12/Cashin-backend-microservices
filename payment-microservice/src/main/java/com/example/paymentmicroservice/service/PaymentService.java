@@ -2,9 +2,9 @@ package com.example.paymentmicroservice.service;
 
 
 import com.example.paymentmicroservice.exception.CustomException;
+import com.example.paymentmicroservice.model.MethodProvider;
 import com.example.paymentmicroservice.model.Payment;
 import com.example.paymentmicroservice.repository.PaymentRepository;
-import com.kastourik12.amqp.RabbitMQMessageProducer;
 import com.kastourik12.clients.notification.NotificationRequest;
 import com.kastourik12.clients.paymentAPI.PayPalPaymentRequest;
 import com.kastourik12.clients.paymentAPI.PaymentCreationResponse;
@@ -30,12 +30,12 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final RestTemplate restTemplate;
 
-    private final RabbitMQMessageProducer rabbitMQMessageProducer;
+    private final amqpPublisher amqpPublisher;
 
 
 
     public ResponseEntity<?> createPayment(PayPalPaymentRequest request, String userId) {
-        String url = "http://" + apiHost + ":" + apiPort + "/v1/paypal/create?userId=" + userId;
+        String url = "http://" + apiHost + ":"+ apiPort + "/v1/paypal/create?userId=" + userId;
         PaymentCreationResponse response = restTemplate.postForObject(
                 url,
                 request,
@@ -62,24 +62,19 @@ public class PaymentService {
         payment.setPayerId(paymentResponse.getPayerId());
         payment.setAmount(paymentResponse.getAmount());
         payment.setCreatedAt(Instant.now());
+        payment.setClient(MethodProvider.PAYPAL);
         this.paymentRepository.save(payment);
         PaymentBalanceHandler paymentBalanceHandler = new PaymentBalanceHandler(
                 payment.getUserId(),
                 Double.parseDouble(paymentResponse.getAmount()),
                 paymentResponse.getCurrency());
-        rabbitMQMessageProducer.publish(
-                paymentBalanceHandler,
-                "users.exchange",
-                "internal.payment.routing-key");
+        amqpPublisher.publish(paymentBalanceHandler);
         NotificationRequest notificationRequest = new NotificationRequest(
-                payment.getUserId().toString(),
-                "Payment completed",
-                payment.getUserId().toString()
+                "Payment completed successfully",
+                "Payment",
+                payment.getUserId()
         );
-        rabbitMQMessageProducer.publish(
-                notificationRequest,
-                "notification.exchange",
-                "internal.notification.routing-key");
+        amqpPublisher.publish(notificationRequest);
         return ResponseEntity.ok("succes");
     }
 

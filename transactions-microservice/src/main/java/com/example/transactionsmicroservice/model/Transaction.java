@@ -16,8 +16,10 @@ import javax.persistence.Id;
 public class Transaction {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String receiver;
-    String sender;
+    Long receiver;
+    Long sender;
     Double amount;
     String currency;
+    String senderName;
+    String receiverName;
 }

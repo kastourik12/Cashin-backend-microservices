@@ -50,21 +50,21 @@ public class AuthService {
 
     private final PasswordEncoder encoder;
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-        if(userRepository.existsByUsername(loginRequest.getUsername())) {
+        if(userRepository.existsByUsername(loginRequest.getEmail())) {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
             String refreshToken = refreshTokenService.generateRefreshToken(authentication);
             JwtResponse response = JwtResponse.builder()
                     .authenticationToken(jwt)
                     .refreshToken(refreshToken)
-                    .username(loginRequest.getUsername())
+                    .username(loginRequest.getEmail())
                     .expiresAt(Date.from(Instant.now().plusMillis(jwtUtils.getJwtExpirationInMillis())))
                     .build();
             return ResponseEntity.ok(response);
         } else {
-            throw new UsernameNotFoundException("Username or password are invalid " + loginRequest.getUsername());
+            throw new UsernameNotFoundException("Username or password are invalid " + loginRequest.getEmail());
         }
     }
     public ResponseEntity<?> saveUser(SignupRequest signupRequest) {
@@ -138,17 +138,7 @@ public class AuthService {
         return ResponseEntity.badRequest().body(new MessageResponse("Invalid Token"));
     }
 
-    public ResponseEntity<UserDTO> validateToken(String token) {
-        if(jwtUtils.validateJwtToken(token)){
-            String username = jwtUtils.getUsernameFromJwtToken(token);
-            Optional<CustomUser> user = userRepository.findByUsername(username);
-            if (user.isPresent()){
-               UserDTO userDTO = new UserDTO(user.get().getId(),user.get().getUsername());
-                return ResponseEntity.ok(userDTO);
-            }
-        }
-        throw new CustomException("Invalid Token");
-    }
+
 }
 
 

@@ -1,24 +1,34 @@
 package com.example.apigateway.filter;
 
+
+import com.example.apigateway.UnAuthorizedException;
 import com.kastourik12.clients.users.UserDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
+
+    private final Logger logger ;
     private final WebClient.Builder webClientBuilder;
     @Value("${client.instancesUri.users}")
     private String authServiceUrl;
 
 
-    public AuthFilter( WebClient.Builder webClientBuilder) {
+    @Autowired
+    public AuthFilter(WebClient.Builder webClientBuilder) {
         super(Config.class);
         this.webClientBuilder = webClientBuilder;
+        this.logger = LoggerFactory.getLogger(AuthFilter.class);
     }
+
 
     @Override
     public GatewayFilter apply(Config config) {
@@ -48,7 +58,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
         };
     }
 
+
+
+
     public static class Config {
-        // empty class as I don't need any particular configuration
+
     }
 }

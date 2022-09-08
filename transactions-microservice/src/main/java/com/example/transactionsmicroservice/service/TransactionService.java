@@ -1,42 +1,46 @@
 package com.example.transactionsmicroservice.service;
 
+import com.example.transactionsmicroservice.controller.TransactionController;
 import com.example.transactionsmicroservice.model.Transaction;
-import com.example.transactionsmicroservice.payload.TransactionRequest;
 import com.example.transactionsmicroservice.repository.TransactionRepository;
-import com.kastourik12.amqp.RabbitMQMessageProducer;
-import com.kastourik12.clients.transactions.TransactionBalanceHandler;
-import com.kastourik12.clients.users.UsersClient;
+import com.kastourik12.clients.transactions.TransactionPayload;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
-    private final RabbitMQMessageProducer rabbitMqMessageProducer;
+    private Logger logger = LoggerFactory.getLogger(TransactionController.class);
     private final TransactionRepository transactionRepository;
-    private final UsersClient usersClient;
-    public ResponseEntity<?> send(TransactionRequest transactionRequest,String userId) {
-        Double senderBalance = usersClient.getBalance(userId).getBody();
-        if(senderBalance != null) {
-        if(senderBalance < transactionRequest.getAmount()) {
-            return ResponseEntity.badRequest().body("Not enough money");
-        }
-        else {
-            Transaction transaction = new Transaction();
-            transaction.setAmount(transactionRequest.getAmount());
-            transaction.setSender(userId);
-            transaction.setReceiver(transactionRequest.getReceiver());
-            transactionRepository.save(transaction);
-            TransactionBalanceHandler transactionBalanceHandler = new TransactionBalanceHandler(
-                    transaction.getReceiver(),
-                    transaction.getSender(),
-                    transaction.getAmount(),
-                    transaction.getCurrency());
-            rabbitMqMessageProducer.publish(transactionBalanceHandler,"users.exchange","users.transaction.routing-key");
-            return ResponseEntity.ok().body("Transaction successful");
-        }
+
+
+    @Transactional
+    public void createTransaction(TransactionPayload transactionPayload) {
+        logger.info("Creating transaction {}", transactionPayload);
+        Transaction transaction = new Transaction();
+        transaction.setAmount(transactionPayload.getAmount());
+        transaction.setSender(transactionPayload.getSender());
+        transaction.setReceiver(transactionPayload.getReceiver());
+        transaction.setSenderName(transactionPayload.getSenderName());
+        transaction.setReceiverName(transactionPayload.getReceiverName());
+        transactionRepository.save(transaction);
     }
-        return ResponseEntity.badRequest().body("User not found");
+
+    public ResponseEntity<?> getAllTransactions(String userId) {
+        logger.info("Getting all transactions for user {}", userId);
+        List<Transaction> transactions = transactionRepository.findAllBySenderOrReceiver(userId, userId);
+        transactions.forEach(transaction -> {
+            if (transaction.getSender().equals(userId)) {
+                transaction.setSenderName("You");
+            } else {
+                transaction.setReceiverName("You");
+            }
+        });
+        return ResponseEntity.ok(transactions);
     }
 }

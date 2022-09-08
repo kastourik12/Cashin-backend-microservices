@@ -20,7 +20,6 @@
       <set>
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/notification-microservice/pom.xml" />
-        <option value="$PROJECT_DIR$/transactions-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/users-microservice/pom.xml" />
       </set>
     </option>

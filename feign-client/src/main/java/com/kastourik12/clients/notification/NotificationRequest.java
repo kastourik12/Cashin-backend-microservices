@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 
 
 
-public record NotificationRequest(String message, String type,String userId ){
+public record NotificationRequest(String message, String type,Long userId ){
 }

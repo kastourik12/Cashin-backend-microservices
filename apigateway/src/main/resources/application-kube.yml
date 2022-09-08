@@ -56,7 +56,7 @@ spring:
 
 client:
   instancesUri:
-    users: http://users:8081/api/auth/
+    users: http://users:8081/auth/
 
 
 

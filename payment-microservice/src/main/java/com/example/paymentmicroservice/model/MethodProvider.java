@@ -1,6 +1,6 @@
 package com.example.paymentmicroservice.model;
 
-public enum EClient {
+public enum MethodProvider {
     PAYPAL,
     PAYONEER,
     PAYME,

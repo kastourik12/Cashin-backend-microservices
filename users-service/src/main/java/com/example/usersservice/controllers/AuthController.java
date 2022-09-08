@@ -20,11 +20,6 @@ import javax.validation.Valid;
 public class AuthController {
 	private final AuthService authService;
 	private Logger logger = LoggerFactory.getLogger(AuthController.class);
-	@PostMapping ("/validateToken")
-	public ResponseEntity<UserDTO> validateToken(@RequestParam(value = "token") String token) {
-		logger.info("inside users service : validating token");
-		return authService.validateToken(token);
-	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

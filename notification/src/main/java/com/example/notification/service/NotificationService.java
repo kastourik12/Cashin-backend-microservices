@@ -25,7 +25,7 @@ public class NotificationService {
         notification.setMessage(request.message());
         notification.setType(request.type());
         notification.setStatus("unread");
-        notification.setUserId(request.userId().toString());
+        notification.setUserId(request.userId());
         notificationRepository.save(notification);
         webSocketService.sendNotification(request);//TODO: implement sending notification
     }

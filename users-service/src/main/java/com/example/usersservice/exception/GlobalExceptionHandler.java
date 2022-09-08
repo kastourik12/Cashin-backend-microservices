@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> usernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(),"username or password are not valid ", request.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails(new Date(),"user is not found ", request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(Exception.class)

@@ -12,6 +12,7 @@
         <module name="notification" />
         <module name="users-service" />
         <module name="amqp" />
+        <module name="transactions-microservice" />
         <module name="eureka-server" />
         <module name="payment-microservice" />
       </profile>
@@ -21,7 +22,6 @@
       <module name="gateway" target="18" />
       <module name="GATWAY" target="18" />
       <module name="notification-microservice" target="18" />
-      <module name="transactions-microservice" target="17" />
       <module name="users-microservice" target="17" />
     </bytecodeTargetLevel>
   </component>

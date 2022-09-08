@@ -40,7 +40,7 @@ spring:
               - Authorization
               - credential
               - X-XSRF-TOKEN
-              - Acccept
+              - Accept
               - Referer
               - refreshToken
             allowedMethods:
@@ -51,11 +51,10 @@ spring:
               - PATCH
               - OPTIONS
 
-
-
 client:
   instancesUri:
-    users: http://localhost:8081/api/auth/
+    users: http://localhost:8081/auth/
 
-
+app:
+  jwtSecret: SecretKey
 

@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,13 +20,14 @@ public class Payment {
 
     @Id
     private String id;
-    private String  amount;
+    private String amount;
     @JsonIgnore
     private String payerId;
     @CreationTimestamp
     private Instant createdAt;
     @JsonIgnore
     private Long userId;
-
+    @Enumerated(EnumType.STRING)
+    private MethodProvider client;
 
 }

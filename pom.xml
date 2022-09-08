@@ -29,7 +29,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <image>kastourik12/${project.artifactId}:${project.version}</image>
   </properties>
 
     <dependencyManagement>
@@ -97,8 +96,12 @@
           <version>3.2.1</version>
           <configuration>
             <from>
-              <image>eclipse-temurin:17</image>
+              <image>openjdk:19-rc-jdk-oraclelinux8@sha256:a4da2027ccdd1ab184cf862c26a75cd03b48cab351f2d7151d4311473d168550</image>
                 <platforms>
+                  <platform>
+                    <architecture>arm64</architecture>
+                    <os>linux</os>
+                  </platform>
                   <platform>
                     <architecture>amd64</architecture>
                     <os>linux</os>
@@ -106,6 +109,7 @@
                 </platforms>
             </from>
             <to>
+              <image>kastourik12/${project.artifactId}:${project.version}</image>
               <tags>
                 <tag>latest</tag>
               </tags>
