@@ -1,7 +1,6 @@
 package com.example.apigateway.filter;
 
 
-import com.example.apigateway.UnAuthorizedException;
 import com.kastourik12.clients.users.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,20 +15,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
 
-    private final Logger logger ;
+    private  Logger logger= LoggerFactory.getLogger(AuthFilter.class);
     private final WebClient.Builder webClientBuilder;
     @Value("${client.instancesUri.users}")
     private String authServiceUrl;
 
 
-    @Autowired
+
     public AuthFilter(WebClient.Builder webClientBuilder) {
         super(Config.class);
         this.webClientBuilder = webClientBuilder;
         this.logger = LoggerFactory.getLogger(AuthFilter.class);
     }
-
-
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
@@ -45,16 +42,19 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             }
             String token = parts[1];
 
-            return webClientBuilder.build()
-                    .post()
-                    .uri(authServiceUrl+"/validateToken?token=" + token)
-                    .retrieve().bodyToMono(UserDTO.class)
-                    .map(userDto -> {
-                        exchange.getRequest()
-                                .mutate()
-                                .header("X-auth-user-id", String.valueOf(userDto.getId()));
-                        return exchange;
-                    }).flatMap(chain::filter);
+            logger.info("inside auth filter : validating access token");
+                return webClientBuilder.build()
+                        .get()
+                        .uri(authServiceUrl+"?token=" + token)
+                        .retrieve().bodyToMono(UserDTO.class)
+                        .map(userDto -> {
+                            exchange.getRequest()
+                                    .mutate()
+                                    .header("x-auth-user-id", String.valueOf(userDto.getId()))
+                                    .header("x-auth-user-login", String.valueOf(userDto.getLogin()));
+                            return exchange;
+                        }).flatMap(chain::filter);
+
         };
     }
 

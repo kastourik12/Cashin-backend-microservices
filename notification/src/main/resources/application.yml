@@ -12,7 +12,7 @@ spring:
       password: c4a7231f34f319
   data:
     mongodb:
-      uri: mongodb+srv://root:root@cluster0.gwqxqob.mongodb.net/?retryWrites=true&w=majority
+      uri: mongodb+srv://root:root@cluster0.yuincts.mongodb.net/?retryWrites=true&w=majority
       database: notification
 eureka:
   client:

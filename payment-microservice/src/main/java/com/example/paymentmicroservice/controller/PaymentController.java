@@ -1,5 +1,6 @@
 package com.example.paymentmicroservice.controller;
 
+import com.example.paymentmicroservice.model.EType;
 import com.example.paymentmicroservice.service.PaymentService;
 import com.kastourik12.clients.paymentAPI.PayPalPaymentRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,22 @@ public class PaymentController {
     @PostMapping("create")
     public ResponseEntity<?> createPayment(@RequestBody PayPalPaymentRequest request,@RequestHeader("X-auth-user-id") String userId) {
         logger.info("inside Payment microserivce : creating payment request");
-        return this.paymentService.createPayment(request,userId);
+        if(request.getUserId() == null || request.getUserId().isEmpty()){
+            request.setUserId(userId);
+        }
+        if(request.getType() == null || request.getType().isEmpty()){
+            request.setType(EType.USER_INCOME.name());
+        }
+        if(request.getRedirectUri() == null || request.getRedirectUri().isEmpty()){
+            request.setRedirectUri("http://localhost:8082/payment/execute");
+        }
+        if(request.getClientId() == null || request.getClientId().isEmpty()){
+            request.setClientId("sb");
+        }
+        if(request.getCancelUri() == null || request.getCancelUri().isEmpty()){
+            request.setCancelUri("http://localhost:8082/payment/cancel");
+        }
+        return this.paymentService.createPayment(request);
     }
     @GetMapping("execute")
     public ResponseEntity<?> executePayment(@RequestParam String paymentId, @RequestParam String PayerID){
@@ -28,13 +44,13 @@ public class PaymentController {
         return this.paymentService.executePayment(paymentId,PayerID);
     }
     @GetMapping("all")
-    public ResponseEntity<?> getAllPayments(@RequestHeader("X-auth-user-name") String userId){
+    public ResponseEntity<?> getAllPayments(@RequestHeader("x-auth-user-id") String userId){
         logger.info("inside Payment microserivce : getting all payments ");
         return this.paymentService.getAllPayments(userId);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getPaymentById(@PathVariable String id,@RequestHeader("X-auth-user-name") String userId){
+    public ResponseEntity<?> getPaymentById(@PathVariable String id,@RequestHeader("x-auth-user-id") String userId){
         logger.info("inside Payment microserivce : getting payment by id ");
         return this.paymentService.getPaymentById(id,userId);
     }

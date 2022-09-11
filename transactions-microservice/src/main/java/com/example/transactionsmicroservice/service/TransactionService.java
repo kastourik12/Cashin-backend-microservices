@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,24 +24,27 @@ public class TransactionService {
     public void createTransaction(TransactionPayload transactionPayload) {
         logger.info("Creating transaction {}", transactionPayload);
         Transaction transaction = new Transaction();
-        transaction.setAmount(transactionPayload.getAmount());
-        transaction.setSender(transactionPayload.getSender());
-        transaction.setReceiver(transactionPayload.getReceiver());
-        transaction.setSenderName(transactionPayload.getSenderName());
-        transaction.setReceiverName(transactionPayload.getReceiverName());
+        transaction.setAmount(transactionPayload.amount());
+        transaction.setSender(transactionPayload.sender());
+        transaction.setReceiver(transactionPayload.receiver());
+        transaction.setSenderName(transactionPayload.senderName());
+        transaction.setReceiverName(transactionPayload.receiverName());
         transactionRepository.save(transaction);
     }
 
     public ResponseEntity<?> getAllTransactions(String userId) {
         logger.info("Getting all transactions for user {}", userId);
-        List<Transaction> transactions = transactionRepository.findAllBySenderOrReceiver(userId, userId);
-        transactions.forEach(transaction -> {
-            if (transaction.getSender().equals(userId)) {
+        List<Transaction> transactions = transactionRepository.findAllBySenderOrReceiver(Long.parseLong(userId),Long.parseLong(userId));
+        ArrayList<Transaction> transactions1 = new ArrayList<>();
+        for(Transaction transaction : transactions){
+            if (transaction.getSender().equals(Long.parseLong(userId))) {
                 transaction.setSenderName("You");
+                transactions1.add(transaction);
             } else {
                 transaction.setReceiverName("You");
+                transactions1.add(transaction);
             }
-        });
-        return ResponseEntity.ok(transactions);
+        }
+        return ResponseEntity.ok(transactions1);
     }
 }

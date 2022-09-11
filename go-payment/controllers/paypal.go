@@ -24,8 +24,7 @@ func (c *Paypal) CreatePayment(ctx *gin.Context) {
 	if err != nil {
 		return
 	}
-	userId := ctx.Query("userId")
-	response, err := c.service.CreatePayment(paypalRequest, userId)
+	response, err := c.service.CreatePayment(paypalRequest)
 	if err != nil {
 		ctx.JSON(400, gin.H{"message": err.Error()})
 		return

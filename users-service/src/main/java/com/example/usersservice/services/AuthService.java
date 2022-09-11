@@ -20,6 +20,7 @@ import com.kastourik12.amqp.RabbitMQMessageProducer;
 import com.kastourik12.clients.notification.NotificationEmail;
 import com.kastourik12.clients.users.UserDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,22 +51,21 @@ public class AuthService {
 
     private final PasswordEncoder encoder;
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-        if(userRepository.existsByUsername(loginRequest.getEmail())) {
+        CustomUser user = userRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + loginRequest.getUsername()));
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                            loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
             String refreshToken = refreshTokenService.generateRefreshToken(authentication);
             JwtResponse response = JwtResponse.builder()
                     .authenticationToken(jwt)
                     .refreshToken(refreshToken)
-                    .username(loginRequest.getEmail())
+                    .username(loginRequest.getUsername())
                     .expiresAt(Date.from(Instant.now().plusMillis(jwtUtils.getJwtExpirationInMillis())))
                     .build();
             return ResponseEntity.ok(response);
-        } else {
-            throw new UsernameNotFoundException("Username or password are invalid " + loginRequest.getEmail());
-        }
     }
     public ResponseEntity<?> saveUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
@@ -139,6 +139,19 @@ public class AuthService {
     }
 
 
+    public ResponseEntity<UserDTO> validateToken(String token) {
+        if(jwtUtils.validateJwtToken(token)) {
+            String username = jwtUtils.getUsernameFromJwtToken(token);
+            Optional<CustomUser> user = userRepository.findByUsername(username);
+            UserDTO userDTO = new UserDTO(user.get().getId(), user.get().getUsername());
+            return ResponseEntity.ok(userDTO);
+        }
+        throw new CustomException("Invalid Token");
+    }
+
+    public String getUsernameFromToken(String token) {
+        return jwtUtils.getUsernameFromJwtToken(token);
+    }
 }
 
 

@@ -2,6 +2,8 @@ package com.example.paymentmicroservice.service;
 
 
 import com.example.paymentmicroservice.exception.CustomException;
+import com.example.paymentmicroservice.model.EStatus;
+import com.example.paymentmicroservice.model.EType;
 import com.example.paymentmicroservice.model.MethodProvider;
 import com.example.paymentmicroservice.model.Payment;
 import com.example.paymentmicroservice.repository.PaymentRepository;
@@ -30,26 +32,28 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final RestTemplate restTemplate;
 
-    private final amqpPublisher amqpPublisher;
+    private final AmqpPublisher amqpPublisher;
 
 
-
-    public ResponseEntity<?> createPayment(PayPalPaymentRequest request, String userId) {
-        String url = "http://" + apiHost + ":"+ apiPort + "/v1/paypal/create?userId=" + userId;
-        PaymentCreationResponse response = restTemplate.postForObject(
+    public ResponseEntity<?> createPayment(PayPalPaymentRequest request) {
+        String url = "http://" + apiHost + ":"+ apiPort + "/v1/paypal/create";
+        ResponseEntity<?> response = restTemplate.postForEntity(
                 url,
                 request,
                 PaymentCreationResponse.class);
-        if(response != null) {
+        if(response.getStatusCode().is2xxSuccessful() && response.getBody() != null){
+            PaymentCreationResponse paymentCreationResponse = (PaymentCreationResponse) response.getBody();
             Payment payment = new Payment();
-            payment.setUserId(Long.parseLong(response.getUserId()));
-            payment.setId(response.getPaymentId());
+            assert request.getUserId() != null;
+            payment.setUserId(Long.parseLong(request.getUserId()));
+            payment.setClientId(request.getClientId());
+            payment.setType(Enum.valueOf(EType.class, request.getType()));
+            payment.setId(paymentCreationResponse.getPaymentId());
+            payment.setStatus(EStatus.PENDING);
             this.paymentRepository.save(payment);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response.getBody());
         }
-        else {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.badRequest().build();
     }
     public ResponseEntity<?> executePayment(String paymentId,String PayerID) {
         PaymentDTO paymentResponse = restTemplate.getForObject(
@@ -62,7 +66,8 @@ public class PaymentService {
         payment.setPayerId(paymentResponse.getPayerId());
         payment.setAmount(paymentResponse.getAmount());
         payment.setCreatedAt(Instant.now());
-        payment.setClient(MethodProvider.PAYPAL);
+        payment.setProvider(MethodProvider.PAYPAL);
+        payment.setStatus(EStatus.SUCCESS);
         this.paymentRepository.save(payment);
         PaymentBalanceHandler paymentBalanceHandler = new PaymentBalanceHandler(
                 payment.getUserId(),
@@ -75,17 +80,17 @@ public class PaymentService {
                 payment.getUserId()
         );
         amqpPublisher.publish(notificationRequest);
-        return ResponseEntity.ok("succes");
+        return ResponseEntity.ok("success");
     }
 
     public ResponseEntity<?> getAllPayments(String userId) {
-        List<Payment> payments = this.paymentRepository.findAllByUserId(userId);
+        List<Payment> payments = this.paymentRepository.findAllByUserId(Long.parseLong(userId));
         return ResponseEntity.ok(payments);
     }
 
     public ResponseEntity<?> getPaymentById(String id, String userId) {
         Payment payment = this.paymentRepository.findById(id).orElseThrow(() -> new CustomException("Payment not found"));
-        if(payment.getUserId().equals(userId)) {
+        if(payment.getUserId().equals(Long.parseLong(userId))) {
             return ResponseEntity.ok(payment);
         }
         else {

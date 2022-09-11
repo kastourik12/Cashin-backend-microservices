@@ -18,3 +18,8 @@ eureka:
     defaultZone: http://eureka:8761/eureka
   client:
     enabled: false
+rabbitmq:
+  exchanges:
+    notification: notification.exchange
+  routing-keys:
+    notification: notification.routing-key

@@ -22,10 +22,10 @@ eureka:
     register-with-eureka: true
 rabbitmq:
   exchanges:
-    internal: notification.exchange
+    notification: notification.exchange
   queues:
     notification: notification.queue
     email: email.queue
   routing-keys:
-    internal-notification: internal.notification.routing-key
-    internal-email: internal.email.routing-key
+    notification: notification.routing-key
+    email: email.routing-key

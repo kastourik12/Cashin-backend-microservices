@@ -1,9 +1,11 @@
 package com.example.usersservice.services;
 
+import com.example.usersservice.exception.UnAuthorizedException;
 import com.example.usersservice.models.CustomUser;
+import com.example.usersservice.payload.request.TransactionRequestPayload;
 import com.example.usersservice.repositories.CustomUserRepository;
+import com.example.usersservice.security.jwt.JwtUtils;
 import com.kastourik12.amqp.RabbitMQMessageProducer;
-import com.kastourik12.clients.transactions.TransactionRequest;
 import com.kastourik12.clients.transactions.TransactionPayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ public class CustomUserService {
     private final CustomUserRepository customUserRepository;
     private final RabbitMQMessageProducer rabbitMQMessageProducer;
 
+
     @Transactional
     public void updateCredit( CustomUser user, Double balance) {
             user.setCredit(user.getCredit() + balance);
@@ -29,16 +32,12 @@ public class CustomUserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found " ));
     }
 
-
-
-    private  CustomUser getUserByUserName(String userName) {
-        CustomUser user = customUserRepository.findByUsernameOrEmailOrPhone(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return user;
-    }
-
-    public ResponseEntity<?> UpdateCreditAndPublishTransaction(TransactionRequest transactionRequest) {
-        CustomUser sender = customUserRepository.findById(transactionRequest.getSender()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        CustomUser receiver = getUserByUserName(transactionRequest.getReceiver());
+    public ResponseEntity<?> UpdateCreditAndPublishTransaction(TransactionRequestPayload transactionRequest, String userId) {
+        CustomUser receiver = customUserRepository.findByUsernameOrEmailOrPhone(transactionRequest.getReceiver()).orElseThrow(() -> new UnAuthorizedException("User not found"));
+        CustomUser sender = customUserRepository.findById(Long.parseLong(userId)).orElseThrow(() -> new UnAuthorizedException("User not found"));
+        if( sender.getCredit() < transactionRequest.getAmount() ) {
+            return ResponseEntity.badRequest().body("Not enough credit");
+        }
         updateCredit(sender,-transactionRequest.getAmount());
         updateCredit(receiver,transactionRequest.getAmount());
         rabbitMQMessageProducer.publish(new TransactionPayload(
@@ -47,7 +46,7 @@ public class CustomUserService {
                 transactionRequest.getAmount(),
                 sender.getUsername(),
                 receiver.getUsername()
-                ),"transactions","transaction");
+                ),"transaction.exchange","users.transaction.routing-key");
         return ResponseEntity.ok("transaction done");
 
     }

@@ -14,10 +14,11 @@
     <module>eureka-server</module>
     <module>transactions-microservice</module>
     <module>users-service</module>
-    <module>feign-client</module>
+    <module>shared-package</module>
     <module>notification</module>
     <module>amqp</module>
-
+    <module>clients-service</module>
+    <module>products-service</module>
   </modules>
 
 

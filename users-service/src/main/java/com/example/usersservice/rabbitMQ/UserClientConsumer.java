@@ -4,7 +4,6 @@ import com.example.usersservice.controllers.AuthController;
 import com.example.usersservice.models.CustomUser;
 import com.example.usersservice.services.CustomUserService;
 import com.kastourik12.clients.paymentAPI.PaymentBalanceHandler;
-import com.kastourik12.clients.transactions.TransactionBalanceHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +21,4 @@ public class UserClientConsumer {
         CustomUser customUser = customUserService.getUser(payment.userId());
         customUserService.updateCredit(customUser,payment.amount());
     }
-
-
-
-
 }

@@ -21,10 +21,15 @@ public class AuthController {
 	private final AuthService authService;
 	private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		logger.info("inside users service : authenticating user");
 		return authService.authenticateUser(loginRequest);
+	}
+	@GetMapping("/validateToken")
+	public ResponseEntity<UserDTO> validateToken(@RequestParam(value = "token") String token) {
+		logger.info("inside users service : validating token");
+		return authService.validateToken(token);
 	}
 
 	@PostMapping("/signup")

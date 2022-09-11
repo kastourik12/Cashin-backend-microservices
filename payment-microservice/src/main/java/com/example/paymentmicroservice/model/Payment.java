@@ -1,23 +1,18 @@
 package com.example.paymentmicroservice.model;
 
+import brave.internal.Nullable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
+@Data
 @Entity
 @Table(name = "payments")
 public class Payment {
-
     @Id
     private String id;
     private String amount;
@@ -28,6 +23,11 @@ public class Payment {
     @JsonIgnore
     private Long userId;
     @Enumerated(EnumType.STRING)
-    private MethodProvider client;
+    private MethodProvider provider;
+    @Nullable @JsonIgnore
+    private String clientId;
+    private EType type;
+    private EStatus status;
+
 
 }

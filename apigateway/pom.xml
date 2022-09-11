@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>com.kastourik12</groupId>
-            <artifactId>feign-client</artifactId>
+            <artifactId>shared-package</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

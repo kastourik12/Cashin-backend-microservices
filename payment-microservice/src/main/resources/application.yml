@@ -23,6 +23,8 @@ eureka:
     defaultZone: http://localhost:8761/eureka
 rabbitmq:
   exchanges:
-    notifications: notifications.exchange
+    users: users.exchange
+    notification: notification.exchange
   routing-keys:
-    notifications: notifications.routing-key
+    users: users.payment.routing-key
+    notification: notification.routing-key

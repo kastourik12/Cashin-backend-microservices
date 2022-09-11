@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final WebSocketService webSocketService;
-
     public ResponseEntity<?> getAllNotification(String userId) {
         return ResponseEntity.ok(notificationRepository.findAllByUserId(userId));
     }
@@ -20,7 +19,6 @@ public class NotificationService {
 
 
     public void saveNotification(NotificationRequest request) {
-
         Notification notification = new Notification();
         notification.setMessage(request.message());
         notification.setType(request.type());
