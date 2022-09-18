@@ -15,9 +15,12 @@ pipeline {
         }
         stage('Test') {
             steps {
-           // withCredentials([usernameColonPassword(credentialsId: 'dockerhub-creds', variable: 'dockerhub-creds')]) {
-             //    sh 'mvn clean install -P build-docker-image'
-            //}
+
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
+                sh 'mvn clean install -P build-docker-image'
+            }
+
+
                 echo 'Testing..'
 
             }
@@ -27,5 +30,7 @@ pipeline {
                 echo 'Deploying....'
             }
         }
+
+
     }
     }
