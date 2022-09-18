@@ -24,11 +24,11 @@ public class TransactionService {
     public void createTransaction(TransactionPayload transactionPayload) {
         logger.info("Creating transaction {}", transactionPayload);
         Transaction transaction = new Transaction();
-        transaction.setAmount(transactionPayload.amount());
-        transaction.setSender(transactionPayload.sender());
-        transaction.setReceiver(transactionPayload.receiver());
-        transaction.setSenderName(transactionPayload.senderName());
-        transaction.setReceiverName(transactionPayload.receiverName());
+        transaction.setAmount(transactionPayload.getAmount());
+        transaction.setSender(transactionPayload.getSender());
+        transaction.setReceiver(transactionPayload.getReceiver());
+        transaction.setSenderName(transactionPayload.getSenderName());
+        transaction.setReceiverName(transactionPayload.getReceiverName());
         transactionRepository.save(transaction);
     }
 

@@ -14,7 +14,7 @@ public class WebSocketService {
     }
 
     public void sendNotification(NotificationRequest request) {
-        template.convertAndSend("/topic/notification", "Notification: " + request.message());
+        template.convertAndSend("/topic/notification", "Notification: " + request.getMessage());
     }
 
 }

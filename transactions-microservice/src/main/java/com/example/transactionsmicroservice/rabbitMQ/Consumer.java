@@ -21,16 +21,16 @@ public class Consumer {
         transactionService.createTransaction(transactionPayload);
         amqpPublisher.publish(new
                 NotificationRequest(
-                "You received a new transaction from " + transactionPayload.senderName(),
+                "You received a new transaction from " + transactionPayload.getSenderName(),
                 "Transaction",
-                transactionPayload.receiver()
+                transactionPayload.getReceiver()
                 )
         );
         amqpPublisher.publish(new
                 NotificationRequest(
-                "You sent a new transaction to " + transactionPayload.receiverName(),
+                "You sent a new transaction to " + transactionPayload.getReceiverName(),
                 "Transaction",
-                transactionPayload.sender()
+                transactionPayload.getSender()
                 )
         );
     }

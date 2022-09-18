@@ -34,10 +34,10 @@ public class NotificationService {
 
     public void saveNotification(NotificationRequest request) {
         Notification notification = new Notification();
-        notification.setMessage(request.message());
-        notification.setType(request.type());
+        notification.setMessage(request.getMessage());
+        notification.setType(request.getType());
         notification.setStatus("unread");
-        notification.setUserId(request.userId());
+        notification.setUserId(request.getUserId());
         notification.setCreatedAt(Instant.now());
         notificationRepository.save(notification);
         webSocketService.sendNotification(request);

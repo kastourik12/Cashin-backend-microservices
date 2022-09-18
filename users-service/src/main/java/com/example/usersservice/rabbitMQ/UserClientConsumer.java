@@ -18,7 +18,7 @@ public class UserClientConsumer {
     @RabbitListener(queues = "${rabbitmq.queues.payment}")
     public void consumer(PaymentBalanceHandler payment) {
         logger.info("Consumed {} from queue", payment);
-        CustomUser customUser = customUserService.getUser(payment.userId());
-        customUserService.updateCredit(customUser,payment.amount());
+        CustomUser customUser = customUserService.getUser(payment.getUserId());
+        customUserService.updateCredit(customUser,payment.getAmount());
     }
 }
