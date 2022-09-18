@@ -14,6 +14,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="amqp" target="17" />
+      <module name="apigateway" target="17" />
+      <module name="clients-service" target="17" />
+      <module name="notification" target="17" />
+      <module name="products-service" target="17" />
+      <module name="shared-package" target="17" />
       <module name="users-microservice" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -21,6 +27,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="eureka-server" options="-parameters" />
       <module name="payment-microservice" options="-parameters" />
+      <module name="transactions-microservice" options="-parameters" />
       <module name="users-microservice" options="-parameters" />
       <module name="users-service" options="-parameters" />
     </option>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/amqp.iml" filepath="$PROJECT_DIR$/amqp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apigateway/apigateway.iml" filepath="$PROJECT_DIR$/apigateway/apigateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/clients-service/clients-service.iml" filepath="$PROJECT_DIR$/clients-service/clients-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notification/notification.iml" filepath="$PROJECT_DIR$/notification/notification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/products-service/products-service.iml" filepath="$PROJECT_DIR$/products-service/products-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared-package/shared-package.iml" filepath="$PROJECT_DIR$/shared-package/shared-package.iml" />
+    </modules>
+  </component>
+</project>
