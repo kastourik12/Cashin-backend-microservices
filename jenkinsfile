@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    environment {
+        DOCKERHUB_CREDS = credentials('dockerhub-creds')
+    }
+    tools{
+    maven 'maven'
+    }
+    stages {
+        stage('Build') {
+            steps {
+            checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-cred', url: 'https://github.com/kastourik12/Cashin-backend-microservices']]])
+                echo 'Building..'
+            }
+        }
+        stage('Test') {
+            steps {
+            withCredentials([usernameColonPassword(credentialsId: 'dockerhub-creds', variable: 'dockerhub-creds')]) {
+                 sh 'mvn clean install -P build-docker-image'
+            }
+                echo 'Testing..'
+
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
+    }
+    }
