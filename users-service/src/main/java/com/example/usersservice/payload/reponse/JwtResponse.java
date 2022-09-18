@@ -11,10 +11,8 @@ import java.util.Date;
 @Data
 @Builder
 public class JwtResponse {
-	private String authenticationToken;
-	private String refreshToken ;
+	private String token;
 	private Date expiresAt;
 	private String username;
-
-
+	private Double balance;
 }

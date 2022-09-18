@@ -22,8 +22,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-		// securedEnabled = true,
-		// jsr250Enabled = true,
 		prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -48,14 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		List<String> allowedMethods=new ArrayList<>();
-		allowedMethods.add("GET");
-		allowedMethods.add("POST");
-		allowedMethods.add("PUT");
-		allowedMethods.add("DELETE");
-		CorsConfiguration cors=new CorsConfiguration();
-		cors.setAllowedMethods(allowedMethods);
-		http.cors().configurationSource(request -> cors.applyPermitDefaultValues());
 		http.csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("**").permitAll()

@@ -13,24 +13,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
 	private final AuthService authService;
 	private Logger logger = LoggerFactory.getLogger(AuthController.class);
-	@PostMapping ("/validateToken")
-	public ResponseEntity<UserDTO> validateToken(@RequestParam(value = "token") String token) {
-		logger.info("inside users service : validating token");
-		return authService.validateToken(token);
-	}
 
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		logger.info("inside users service : authenticating user");
 		return authService.authenticateUser(loginRequest);
+	}
+	@GetMapping("/validateToken")
+	public ResponseEntity<UserDTO> validateToken(@RequestParam(value = "token") String token) {
+		logger.info("inside users service : validating token");
+		return authService.validateToken(token);
 	}
 
 	@PostMapping("/signup")
@@ -44,15 +43,8 @@ public class AuthController {
 		return authService.verifyUser(token);
 	}
 
-	@GetMapping("/refresh")
-	public ResponseEntity<?> refreshAndGetAuthenticationToken(@RequestBody String token) {
-		logger.info("inside Auth microserivce : refreshing token");
-		return authService.refreshAndGetAuthenticationToken(token);
-	}
 
-	@PostMapping("/signout")
-	public ResponseEntity<?> signOut(@RequestBody String token) {
 
-		return authService.signOut(token);
-	}
+
+
 }

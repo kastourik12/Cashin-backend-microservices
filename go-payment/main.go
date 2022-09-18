@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/ArthurHlt/go-eureka-client/eureka"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/netlify/PayPal-Go-SDK"
@@ -22,8 +21,8 @@ var (
 )
 
 func init() {
+	godotenv.Load()
 	logger = log.Default()
-	godotenv.Load(".env")
 	ctx = context.TODO()
 	server = gin.Default()
 	client, err := paypalsdk.NewClient(os.Getenv("PAYPAL_CLIENT_ID"), os.Getenv("PAYPAL_CLIENT_SECRET"), paypalsdk.APIBaseSandBox)
@@ -32,27 +31,13 @@ func init() {
 	}
 	_, err = client.GetAccessToken()
 	if err != nil {
-		log.Println("can get access token")
+		log.Println("can't get access token")
 	}
-
 	paypalService = services.NewPaypalService(client, logger)
 	paypalController = controllers.NewPaypalController(paypalService, logger)
 
 }
 func main() {
-	c := eureka.NewClient([]string{
-		"http://127.0.0.1:8761/eureka",
-	})
-	instance1 := eureka.NewInstanceInfo(" 172.20.10.4", "goapi", "192.168.8.100", 9090, 30, false) //Create a new instance1 to register
-	err := c.RegisterInstance("goapi", instance1)
-	if err != nil {
-		log.Println(err)
-	}
-	err = c.SendHeartbeat(instance1.App, instance1.HostName)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	basePath := server.Group("/v1")
 	paypalController.RegisterRoutes(basePath)
 	log.Fatalf(server.Run(":9090").Error())

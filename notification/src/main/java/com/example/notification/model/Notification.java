@@ -1,24 +1,24 @@
 package com.example.notification.model;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import nonapi.io.github.classgraph.json.Id;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 
-@Entity(name = "notification")
-@AllArgsConstructor
-@NoArgsConstructor
+@Document
 @Data
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String message;
     private String type;
     private String status;
+    @CreatedDate
+    private Instant createdAt;
     private Long userId;
 }
