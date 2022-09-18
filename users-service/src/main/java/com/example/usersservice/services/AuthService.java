@@ -1,6 +1,5 @@
 package com.example.usersservice.services;
 
-import com.example.usersservice.events.UserRegistrationEvent;
 import com.example.usersservice.exception.CustomException;
 import com.example.usersservice.models.CustomUser;
 import com.example.usersservice.models.ECurrency;
@@ -13,11 +12,13 @@ import com.example.usersservice.payload.request.SignupRequest;
 import com.example.usersservice.repositories.CustomUserRepository;
 import com.example.usersservice.repositories.RoleRepository;
 import com.example.usersservice.security.jwt.JwtUtils;
-import com.example.usersservice.security.refreshToken.RefreshTokenService;
 import com.example.usersservice.security.verficationKey.VerificationToken;
 import com.example.usersservice.security.verficationKey.VerificationTokenRepository;
+import com.example.usersservice.security.verficationKey.VerificationTokenService;
+import com.kastourik12.amqp.RabbitMQMessageProducer;
+import com.kastourik12.clients.notification.NotificationEmail;
+import com.kastourik12.clients.users.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,39 +31,37 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
-    private final ApplicationEventPublisher eventPublisher;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
+    private final VerificationTokenService verificationTokenService;
     private final CustomUserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final VerificationTokenRepository verificationTokenRepository;
 
-    private final RefreshTokenService refreshTokenService;
 
     private final PasswordEncoder encoder;
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-        if(userRepository.existsByUsername(loginRequest.getUsername())) {
+        CustomUser user = userRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + loginRequest.getUsername()));
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                            loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
-            String refreshToken = refreshTokenService.generateRefreshToken(authentication);
             JwtResponse response = JwtResponse.builder()
-                    .authenticationToken(jwt)
-                    .refreshToken(refreshToken)
-                    .username(loginRequest.getUsername())
+                    .token(jwt)
+                    .username(user.getUsername())
                     .expiresAt(Date.from(Instant.now().plusMillis(jwtUtils.getJwtExpirationInMillis())))
+                    .balance(user.getCredit())
                     .build();
             return ResponseEntity.ok(response);
-        } else {
-            throw new UsernameNotFoundException("Username or password are invalid " + loginRequest.getUsername());
-        }
     }
     public ResponseEntity<?> saveUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
@@ -80,7 +79,6 @@ public class AuthService {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Phone is already in use!"));
-
         }
         CustomUser user = CustomUser.builder()
                 .username(signupRequest.getUsername())
@@ -91,8 +89,8 @@ public class AuthService {
                 .phone(signupRequest.getPhoneNumber())
                 .enabled(false)
                 .defaultCurrency(ECurrency.USD)
-                .credit(0)
-                .roles(new HashSet<Role>())
+                .credit(0.0)
+                .roles(new HashSet<>())
                 .build();
             Set<Role> roles = new HashSet<>();
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -100,7 +98,14 @@ public class AuthService {
             roles.add(userRole);
             user.setRoles(roles);
         userRepository.save(user);
-        eventPublisher.publishEvent(new UserRegistrationEvent(user));
+        String token =verificationTokenService.generateVerificationToken(user.getUsername());
+        NotificationEmail notificationEmail = NotificationEmail.builder()
+                .subject("Verify your account")
+                .recipient(user.getEmail())
+                .body("To verify your account, please click on the link below:\n" +
+                        "http://localhost:8081/api/auth/accountVerification/"+ token)
+                .build();
+        rabbitMQMessageProducer.publish(notificationEmail, "notification.exchange","internal.email.routing-key");
         return ResponseEntity.ok(new MessageResponse("User registered successfully! you need to activate your account ! check your email"));
     }
 
@@ -113,28 +118,22 @@ public class AuthService {
         return ResponseEntity.ok(new MessageResponse("User verified successfully!"));
     }
 
-    public ResponseEntity<?> refreshAndGetAuthenticationToken(String token) {
-        if(jwtUtils.validateJwtToken(token)){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwt =this.jwtUtils.generateJwtToken(authentication);
-        String refreshToken = refreshTokenService.generateRefreshToken(authentication);
-        JwtResponse response = JwtResponse.builder()
-                .authenticationToken(jwt)
-                .refreshToken(refreshToken)
-                .username(authentication.getName())
-                .expiresAt(Date.from(Instant.now().plusMillis(jwtUtils.getJwtRefreshExpirationInMillis())))
-                .build();
-        return ResponseEntity.ok(response);
+
+
+
+    public ResponseEntity<UserDTO> validateToken(String token) {
+        if(jwtUtils.validateJwtToken(token)) {
+            String username = jwtUtils.getUsernameFromJwtToken(token);
+            Optional<CustomUser> user = userRepository.findByUsername(username);
+            UserDTO userDTO = new UserDTO(user.get().getId(), user.get().getUsername());
+            return ResponseEntity.ok(userDTO);
         }
-        return ResponseEntity.badRequest().body(new MessageResponse("Invalid Token"));
+        throw new CustomException("Invalid Token");
     }
 
-    public ResponseEntity<?> signOut(String token) {
-        String username = refreshTokenService.getUsernameFromRefreshToken(token);
-        refreshTokenService.removeAllTokensByuser(username);
-        return ResponseEntity.ok(new MessageResponse("User signed out successfully!"));
+    public String getUsernameFromToken(String token) {
+        return jwtUtils.getUsernameFromJwtToken(token);
     }
-
 }
 
 

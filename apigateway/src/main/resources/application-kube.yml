@@ -2,6 +2,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://eureka:8761/eureka/
+<<<<<<< HEAD
+=======
+    enabled: false
+>>>>>>> 0ee7b178481e15f7b7c8b58e0ef798f37b68962a
 spring:
   zipkin:
     base-url: http://zipkin:9411
@@ -67,6 +71,7 @@ spring:
             - Method=GET,POST,PUT,DELETE,OPTIONS
           filters:
             - ClientFilter
+
       globalcors:
         corsConfigurations:
           '[/**]':

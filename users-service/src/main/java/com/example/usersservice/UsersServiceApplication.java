@@ -2,10 +2,15 @@ package com.example.usersservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@SpringBootApplication
-@EnableEurekaClient
+@SpringBootApplication(
+        scanBasePackages = {
+                "com.example.usersservice",
+                "com.kastourik12.amqp"
+        }
+)
+@EnableDiscoveryClient
 public class UsersServiceApplication {
 
     public static void main(String[] args) {

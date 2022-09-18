@@ -3,15 +3,6 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="transactions-microservice" />
-        <module name="users-service" />
-        <module name="eureka-server" />
-        <module name="payment-microservice" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="amqp" target="17" />
@@ -20,16 +11,6 @@
       <module name="notification" target="17" />
       <module name="products-service" target="17" />
       <module name="shared-package" target="17" />
-      <module name="users-microservice" target="17" />
     </bytecodeTargetLevel>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="eureka-server" options="-parameters" />
-      <module name="payment-microservice" options="-parameters" />
-      <module name="transactions-microservice" options="-parameters" />
-      <module name="users-microservice" options="-parameters" />
-      <module name="users-service" options="-parameters" />
-    </option>
   </component>
 </project>

@@ -2,7 +2,11 @@ spring:
   zipkin:
     base-url: http://zipkin:9411
   rabbitmq:
+<<<<<<< HEAD
     addresses: rabbits.rabbitmq:5672
+=======
+    addresses: rabbitmq:5672
+>>>>>>> 0ee7b178481e15f7b7c8b58e0ef798f37b68962a
   mail:
     protocol: smtp
     host: smtp.mailtrap.io
