@@ -8,6 +8,14 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepository extends MongoRepository<Category, String> {
+
+
     List<Category> findAllByProductIdAndClientId(String productId, String clientId);
+
+    List<Category> findAllByUserId(String userId);
+
+    List<Category> findAllByClientIdAndUserId(String clientId, String userId);
+
+    List<Category> findAllByClientId(String clientId);
 }
 

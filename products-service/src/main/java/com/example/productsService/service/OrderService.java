@@ -32,7 +32,7 @@ public class OrderService {
             if (category.getQuantity() < categoryOrder.getQuantity()){
                 throw new CustomException("Not enough quantity");
             }
-            if(!category.getProduct().getClientId().equals(clientId)){
+            if(!category.getClientId().equals(clientId)){
                 throw new UnAuthorizedException("You are not allowed to buy this product");
             }
             totalPrice.updateAndGet(v -> v + category.getPrice() * categoryOrder.getQuantity());

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mongodb.lang.Nullable;
 import lombok.Data;
 import nonapi.io.github.classgraph.json.Id;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,8 +17,6 @@ public class Product {
     @Id
     private String id;
     private String name;
-    @DBRef(lazy = true) @Nullable
-    private List<Category> categories;
     @JsonIgnore
     private String clientId;
     @JsonIgnore

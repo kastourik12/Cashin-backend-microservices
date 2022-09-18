@@ -12,7 +12,6 @@ import com.example.usersservice.payload.request.SignupRequest;
 import com.example.usersservice.repositories.CustomUserRepository;
 import com.example.usersservice.repositories.RoleRepository;
 import com.example.usersservice.security.jwt.JwtUtils;
-import com.example.usersservice.security.refreshToken.RefreshTokenService;
 import com.example.usersservice.security.verficationKey.VerificationToken;
 import com.example.usersservice.security.verficationKey.VerificationTokenRepository;
 import com.example.usersservice.security.verficationKey.VerificationTokenService;
@@ -20,7 +19,6 @@ import com.kastourik12.amqp.RabbitMQMessageProducer;
 import com.kastourik12.clients.notification.NotificationEmail;
 import com.kastourik12.clients.users.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +45,6 @@ public class AuthService {
     private final JwtUtils jwtUtils;
     private final VerificationTokenRepository verificationTokenRepository;
 
-    private final RefreshTokenService refreshTokenService;
 
     private final PasswordEncoder encoder;
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
@@ -58,12 +55,11 @@ public class AuthService {
                             loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
-            String refreshToken = refreshTokenService.generateRefreshToken(authentication);
             JwtResponse response = JwtResponse.builder()
-                    .authenticationToken(jwt)
-                    .refreshToken(refreshToken)
-                    .username(loginRequest.getUsername())
+                    .token(jwt)
+                    .username(user.getUsername())
                     .expiresAt(Date.from(Instant.now().plusMillis(jwtUtils.getJwtExpirationInMillis())))
+                    .balance(user.getCredit())
                     .build();
             return ResponseEntity.ok(response);
     }
@@ -122,21 +118,7 @@ public class AuthService {
         return ResponseEntity.ok(new MessageResponse("User verified successfully!"));
     }
 
-    public ResponseEntity<?> refreshAndGetAuthenticationToken(String token) {
-        if(jwtUtils.validateJwtToken(token)){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwt =this.jwtUtils.generateJwtToken(authentication);
-        String refreshToken = refreshTokenService.generateRefreshToken(authentication);
-        JwtResponse response = JwtResponse.builder()
-                .authenticationToken(jwt)
-                .refreshToken(refreshToken)
-                .username(authentication.getName())
-                .expiresAt(Date.from(Instant.now().plusMillis(jwtUtils.getJwtRefreshExpirationInMillis())))
-                .build();
-        return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.badRequest().body(new MessageResponse("Invalid Token"));
-    }
+
 
 
     public ResponseEntity<UserDTO> validateToken(String token) {

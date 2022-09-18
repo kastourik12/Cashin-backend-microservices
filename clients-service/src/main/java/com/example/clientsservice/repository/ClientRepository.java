@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ClientRepository extends MongoRepository<Client,String> {
     Boolean existsByClientId(String clientId);
 
+    Optional<Client> searchFirstByClientId(String clientId);
+
     Optional<Client> findByClientId(String clientId);
 
     List<Client> findAllByUserId(long parseLong);

@@ -1,6 +1,7 @@
 package com.example.apigateway.filter;
 
 
+import com.example.apigateway.UnAuthorizedException;
 import com.kastourik12.clients.users.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +42,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 throw new RuntimeException("Incorrect authorization structure");
             }
             String token = parts[1];
+            logger.info(token);
 
             logger.info("inside auth filter : validating access token");
+            try{
                 return webClientBuilder.build()
                         .get()
                         .uri(authServiceUrl+"?token=" + token)
@@ -55,6 +58,9 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                             return exchange;
                         }).flatMap(chain::filter);
 
+        }catch (Exception e){
+            throw new UnAuthorizedException("Invalid token");
+        }
         };
     }
 

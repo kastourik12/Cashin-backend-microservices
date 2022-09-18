@@ -35,16 +35,17 @@ public class TransactionService {
     public ResponseEntity<?> getAllTransactions(String userId) {
         logger.info("Getting all transactions for user {}", userId);
         List<Transaction> transactions = transactionRepository.findAllBySenderOrReceiver(Long.parseLong(userId),Long.parseLong(userId));
-        ArrayList<Transaction> transactions1 = new ArrayList<>();
+        List<Transaction> transactions1 = new ArrayList<>();
         for(Transaction transaction : transactions){
             if (transaction.getSender().equals(Long.parseLong(userId))) {
                 transaction.setSenderName("You");
-                transactions1.add(transaction);
             } else {
                 transaction.setReceiverName("You");
-                transactions1.add(transaction);
             }
-        }
+            transactions1.add(transaction);
+            }
         return ResponseEntity.ok(transactions1);
-    }
+        }
+
 }
+

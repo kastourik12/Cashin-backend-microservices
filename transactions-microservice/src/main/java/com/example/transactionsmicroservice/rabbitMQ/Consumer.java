@@ -21,15 +21,15 @@ public class Consumer {
         transactionService.createTransaction(transactionPayload);
         amqpPublisher.publish(new
                 NotificationRequest(
+                "You received a new transaction from " + transactionPayload.senderName(),
                 "Transaction",
-                "You recvied a new transaction from " + transactionPayload.senderName(),
                 transactionPayload.receiver()
                 )
         );
         amqpPublisher.publish(new
                 NotificationRequest(
-                "Transaction",
                 "You sent a new transaction to " + transactionPayload.receiverName(),
+                "Transaction",
                 transactionPayload.sender()
                 )
         );

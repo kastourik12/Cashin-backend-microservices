@@ -12,6 +12,6 @@ import java.util.List;
 @Data @AllArgsConstructor @NoArgsConstructor
 public class ProductCreationPayload {
     private String name;
-    private List<CategoryPayload> categories;
+    private List<CategoryPayload> products;
     private String clientId;
 }

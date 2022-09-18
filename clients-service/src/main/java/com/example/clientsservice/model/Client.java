@@ -7,12 +7,10 @@ import nonapi.io.github.classgraph.json.Id;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.crypto.SecretKey;
-
 @Document
 @Data
 public class Client {
-    @Id
+    @Id @JsonIgnore
     private ObjectId id;
     private String clientId;
     private String secretKey;
@@ -20,8 +18,8 @@ public class Client {
     private String applicationUrl;
     private String applicationDescription;
     private ECurrency currency;
+    @JsonIgnore
     private Long userId;
-
     public Client() {
 
     }

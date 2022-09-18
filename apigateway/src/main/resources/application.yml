@@ -20,7 +20,6 @@ spring:
           - Method=GET,POST,PUT,DELETE,OPTIONS
         filters:
           - AuthFilter
-
       - id: payment
         uri: lb://payment
         predicates:
@@ -31,14 +30,14 @@ spring:
       - id: notification
         uri: lb://notification
         predicates:
-          - Path=/notification/*
+          - Path=/notif/*
           - Method=GET,POST,PUT,DELETE,OPTIONS
         filters:
           - AuthFilter
       - id: transaction
         uri: lb://transaction
         predicates:
-          - Path=/transaction/*
+          - Path=/transaction/**
           - Method=GET,OPTIONS
         filters:
           - AuthFilter
@@ -68,11 +67,10 @@ spring:
           - Method=GET,POST,PUT,DELETE,OPTIONS
         filters:
           - ClientFilter
-
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOrigins: "http://localhost:4200"
             allowedHeaders:
               - x-requested-with
               - Authorization
@@ -91,6 +89,8 @@ spring:
               - DELETE
               - PATCH
               - OPTIONS
+        add-to-simple-url-handler-mapping: on
+
 
 client:
   instancesUri:

@@ -41,7 +41,7 @@ spring:
               - Authorization
               - credential
               - X-XSRF-TOKEN
-              - Acccept
+              - Accept
               - Referer
               - refreshToken
             allowedMethods:

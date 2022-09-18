@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/payment/")
@@ -39,7 +40,7 @@ public class PaymentController {
         return this.paymentService.createPayment(request);
     }
     @GetMapping("execute")
-    public ResponseEntity<?> executePayment(@RequestParam String paymentId, @RequestParam String PayerID){
+    public RedirectView executePayment(@RequestParam String paymentId, @RequestParam String PayerID){
         logger.info("inside Payment microserivce : executing created payment ");
         return this.paymentService.executePayment(paymentId,PayerID);
     }

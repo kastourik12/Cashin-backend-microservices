@@ -72,7 +72,7 @@ public class ClientService {
 
     public ResponseEntity<?> getClient(String userId, String clientId) {
         logger.info("Getting client {} for user {}", clientId, userId);
-        Client client = clientRepository.findByClientId(clientId).orElseThrow(()->new CustomException("Client not found"));
+        Client client = clientRepository.searchFirstByClientId(clientId).orElseThrow(()->new CustomException("Client not found"));
         if (!client.getUserId().equals(Long.parseLong(userId))) {
             return ResponseEntity.badRequest().build();
         }

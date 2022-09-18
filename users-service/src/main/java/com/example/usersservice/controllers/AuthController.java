@@ -43,11 +43,8 @@ public class AuthController {
 		return authService.verifyUser(token);
 	}
 
-	@GetMapping("/refresh")
-	public ResponseEntity<?> refreshAndGetAuthenticationToken(@RequestBody String token) {
-		logger.info("inside Auth microserivce : refreshing token");
-		return authService.refreshAndGetAuthenticationToken(token);
-	}
+
+
 
 
 }

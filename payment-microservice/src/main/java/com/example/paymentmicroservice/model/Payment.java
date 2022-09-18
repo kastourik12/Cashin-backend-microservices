@@ -23,9 +23,12 @@ public class Payment {
     @JsonIgnore
     private Long userId;
     @Enumerated(EnumType.STRING)
-    private MethodProvider provider;
-    @Nullable @JsonIgnore
+    private ECurrency currency;
+    @JsonIgnore
     private String clientId;
+    @Enumerated(EnumType.STRING)
+    private MethodProvider provider;
+    @Nullable
     private EType type;
     private EStatus status;
 

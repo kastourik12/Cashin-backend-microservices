@@ -1,5 +1,6 @@
 package com.example.transactionsmicroservice.controller;
 
+import com.example.transactionsmicroservice.model.Transaction;
 import com.example.transactionsmicroservice.payload.TransactionRequest;
 import com.example.transactionsmicroservice.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class TransactionController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllTransactions(@RequestHeader("x-auth-user-id") String userId) {
-        return ResponseEntity.ok(transactionService.getAllTransactions(userId));
+        return transactionService.getAllTransactions(userId);
     }
 
 

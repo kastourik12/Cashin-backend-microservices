@@ -37,6 +37,7 @@ func (s *Paypal) CreatePayment(request requests.Paypal) (response.Paypal, error)
 			successLink = link.Href
 		}
 	}
+
 	creationResponse := response.Paypal{
 		PaymentId:   payment.ID,
 		SuccessLink: successLink,

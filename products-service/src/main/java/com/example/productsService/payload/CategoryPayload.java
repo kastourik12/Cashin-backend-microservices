@@ -9,7 +9,9 @@ import java.util.List;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 public class CategoryPayload {
+    private String name;
     private Double price;
     private Long quantity;
     private List<Description> descriptionList;
+
 }

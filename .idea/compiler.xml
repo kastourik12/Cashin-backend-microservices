@@ -24,6 +24,7 @@
       <module name="gateway" target="18" />
       <module name="GATWAY" target="18" />
       <module name="notification-microservice" target="18" />
+      <module name="product-service" target="17" />
       <module name="users-microservice" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -38,6 +39,7 @@
       <module name="notification" options="" />
       <module name="notification-microservice" options="" />
       <module name="payment-microservice" options="" />
+      <module name="product-service" options="" />
       <module name="transactions-microservice" options="" />
       <module name="users-microservice" options="-parameters" />
       <module name="users-service" options="" />

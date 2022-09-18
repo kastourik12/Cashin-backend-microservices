@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.validation.OverridesAttribute;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -44,4 +47,14 @@ public class CategoryService {
     return ResponseEntity.ok(categoryRepository.findAllByProductIdAndClientId(productId, clientId));
     }
 
+    public ResponseEntity<?> getCategoryByUserId(String userId) {
+        return ResponseEntity.ok(this.categoryRepository.findAllByUserId(userId));
+    }
+    public ResponseEntity<?> getCategoryByClientId(String userId, String clientId) {
+        List<Category> products = this.categoryRepository.findAllByClientIdAndUserId(clientId,userId);
+        return ResponseEntity.ok(products);
+    }
+    public List<Category> getCategoryByClientId(String clientId) {
+        return this.categoryRepository.findAllByClientId(clientId);
+    }
 }

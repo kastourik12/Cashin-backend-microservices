@@ -2,10 +2,7 @@ package com.example.paymentmicroservice.service;
 
 
 import com.example.paymentmicroservice.exception.CustomException;
-import com.example.paymentmicroservice.model.EStatus;
-import com.example.paymentmicroservice.model.EType;
-import com.example.paymentmicroservice.model.MethodProvider;
-import com.example.paymentmicroservice.model.Payment;
+import com.example.paymentmicroservice.model.*;
 import com.example.paymentmicroservice.repository.PaymentRepository;
 import com.kastourik12.clients.notification.NotificationRequest;
 import com.kastourik12.clients.paymentAPI.PayPalPaymentRequest;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.Instant;
 import java.util.List;
@@ -55,7 +53,7 @@ public class PaymentService {
         }
         return ResponseEntity.badRequest().build();
     }
-    public ResponseEntity<?> executePayment(String paymentId,String PayerID) {
+    public RedirectView executePayment(String paymentId, String PayerID) {
         PaymentDTO paymentResponse = restTemplate.getForObject(
                 "http://"+apiHost+":"+apiPort+"/v1/paypal/execute?paymentId="+paymentId+"&PayerID="+PayerID,
                 PaymentDTO.class);
@@ -68,6 +66,7 @@ public class PaymentService {
         payment.setCreatedAt(Instant.now());
         payment.setProvider(MethodProvider.PAYPAL);
         payment.setStatus(EStatus.SUCCESS);
+        payment.setCurrency(ECurrency.USD);
         this.paymentRepository.save(payment);
         PaymentBalanceHandler paymentBalanceHandler = new PaymentBalanceHandler(
                 payment.getUserId(),
@@ -80,7 +79,9 @@ public class PaymentService {
                 payment.getUserId()
         );
         amqpPublisher.publish(notificationRequest);
-        return ResponseEntity.ok("success");
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:4200/payment/success");
+        return redirectView;
     }
 
     public ResponseEntity<?> getAllPayments(String userId) {
