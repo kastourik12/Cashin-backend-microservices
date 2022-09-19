@@ -21,7 +21,8 @@ pipeline {
 
 
                 withCredentials([usernamePassword(credentialsId: 'creds_docker', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
-
+                            sh 'mvn -pl shared-package package'
+                            sh 'mvn -pl amqp package'
                             sh 'mvn -pl apigateway compile jib:dockerBuild'
                             sh 'mvn -pl payment-microservice compile jib:dockerBuild'
                             sh 'mvn -pl eureka-server compile jib:dockerBuild'
