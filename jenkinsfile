@@ -31,8 +31,8 @@ pipeline {
         stage('Scan') {
             steps {
                 echo 'Scanning..'
-                snykSecurity severity: 'high', snykInstallation: 'snyk', snykTokenId: 'snyk_token'
-
+               // snykSecurity severity: 'high', snykInstallation: 'snyk', snykTokenId: 'snyk_token'
+                snykSecurity failOnIssues: false, snykInstallation: 'snyk', snykTokenId: 'snyk_token'
 
             }
         }

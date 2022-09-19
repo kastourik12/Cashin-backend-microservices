@@ -20,6 +20,31 @@
     <module>clients-service</module>
     <module>products-service</module>
   </modules>
+  <profiles>
+    <profile>
+      <id>build-docker-image</id>
+     <modules>
+       <module>clients-service</module>
+       <module>products-service</module>
+       <module>notification</module>
+       <module>apigateway</module>
+       <module>payment-microservice</module>
+       <module>eureka-server</module>
+       <module>transactions-microservice</module>
+       <module>users-service</module>
+     </modules>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
+      <id>package</id>
+      <modules>
+        <module>shared-package</module>
+        <module>amqp</module>
+      </modules>
+    </profile>
+  </profiles>
 
 
   <name>cashin-backend</name>
