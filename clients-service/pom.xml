@@ -66,8 +66,8 @@
             <artifactId>shared-package</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>/home/kastouri/.m2/repository/com/kastourik12/shared-package/1.0-SNAPSHOT/shared-package-1.0-SNAPSHOT.jar</systemPath>
-        </dependency>
+            <systemPath>/workspace/firstpipeline/shared-package/target/shared-package-1.0-SNAPSHOT.jar</systemPath>
+                    </dependency>
     </dependencies>
 
     <build>
