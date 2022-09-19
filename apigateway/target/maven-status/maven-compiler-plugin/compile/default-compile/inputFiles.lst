@@ -1,7 +1,0 @@
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/ApigatewayApplication.java
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/filter/AuthFilter.java
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/UnAuthorizedException.java
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/filter/ClientFilter.java
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/config/Configuration.java
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/filter/global/PreFilter.java
-/home/kastouri/Desktop/Cashin-backend-microservices/apigateway/src/main/java/com/example/apigateway/filter/global/LoggingFilter.java

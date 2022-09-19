@@ -40,6 +40,7 @@
         </profile>
     </profiles>
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
@@ -97,7 +98,8 @@
             <groupId>com.kastourik12</groupId>
             <artifactId>shared-package</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>system</scope>
+            <systemPath>/home/kastouri/.m2/repository/com/kastourik12/shared-package/1.0-SNAPSHOT/shared-package-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
     </dependencies>

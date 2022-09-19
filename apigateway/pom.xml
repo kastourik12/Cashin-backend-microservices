@@ -58,7 +58,8 @@
             <groupId>com.kastourik12</groupId>
             <artifactId>shared-package</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>system</scope>
+            <systemPath>/home/kastouri/.m2/repository/com/kastourik12/shared-package/1.0-SNAPSHOT/shared-package-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
 
