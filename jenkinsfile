@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_CREDS = credentials('dockerhub-creds')
-        DOCKER_USRPW = " "
+        DOCKERHUB_CREDS = credentials('creds_docker')
     }
     tools{
     maven 'maven'
@@ -18,8 +17,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'echo $DOCKER_USRPW | docker login -u kastouri --password-stdin'
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
+
+
+                withCredentials([usernamePassword(credentialsId: 'creds_docker', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
 
                             sh 'mvn -pl apigateway compile jib:dockerBuild'
                             sh 'mvn -pl payment-microservice compile jib:dockerBuild'
