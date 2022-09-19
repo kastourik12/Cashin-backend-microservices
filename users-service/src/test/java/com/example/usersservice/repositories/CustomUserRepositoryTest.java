@@ -2,6 +2,7 @@ package com.example.usersservice.repositories;
 
 import com.example.usersservice.models.CustomUser;
 import com.example.usersservice.models.ECurrency;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,7 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class CustomUserRepositoryTest {
     @Autowired
-    private CustomUserRepository customUserRepository;
+    private CustomUserRepository underTest;
+
+    @AfterEach
+    void tearDown() {
+        underTest.deleteAll();
+    }
 
     @Test
     void findByUsername() {
@@ -28,9 +34,9 @@ class CustomUserRepositoryTest {
                 .defaultCurrency(ECurrency.USD)
                 .enabled(true)
                 .build();
-        customUserRepository.save(user);
+        underTest.save(user);
         //when
-        CustomUser foundUser = customUserRepository.findByUsername("test").orElse(null);
+        CustomUser foundUser = underTest.findByUsername("test").orElse(null);
         //then
         assertThat(foundUser.getUsername()).isEqualTo(user.getUsername());
     }

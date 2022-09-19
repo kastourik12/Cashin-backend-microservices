@@ -20,6 +20,22 @@
     <module>clients-service</module>
     <module>products-service</module>
   </modules>
+  <profiles>
+    <profile>
+      <id>jenkins-build</id>
+      <modules>
+        <module>clients-service</module>
+        <module>products-service</module>
+        <module>notification</module>
+        <module>apigateway</module>
+        <module>payment-microservice</module>
+        <module>eureka-server</module>
+        <module>transactions-microservice</module>
+        <module>users-service</module>
+      </modules>
+
+    </profile>
+  </profiles>
 
 
   <name>cashin-backend</name>

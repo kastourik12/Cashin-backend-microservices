@@ -7,26 +7,62 @@ pipeline {
     maven 'maven'
     }
     stages {
-        stage('Build') {
+
+
+        stage('Checkout GIT') {
             steps {
             checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-cred', url: 'https://github.com/kastourik12/Cashin-backend-microservices']]])
+            }
+        }
+        stage('Build') {
+            steps {
                 echo 'Building..'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
+
+                            sh 'mvn -pl apigateway compile jib:dockerBuild'
+                            sh 'mvn -pl payment-microservice compile jib:dockerBuild'
+                            sh 'mvn -pl eureka-server compile jib:dockerBuild'
+                            sh 'mvn -pl transactions-microservice compile jib:dockerBuild'
+                            sh 'mvn -pl users-service compile jib:dockerBuild'
+                            sh 'mvn -pl notification compile jib:dockerBuild'
+                            sh 'mvn -pl clients-service compile jib:dockerBuild'
+                            sh 'mvn -pl products-service compile jib:dockerBuild'
+                }
+
             }
         }
         stage('Test') {
             steps {
 
-            withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
+            /* withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
                 sh 'mvn clean install -P build-docker-image'
-            }
+            } */
 
 
-                echo 'Testing..'
+
 
             }
         }
-        stage('Deploy') {
+
+        stage('Scan') {
             steps {
+                echo 'Scanning..'
+                snykSecurity severity: 'high', snykInstallation: 'snyk', snykTokenId: 'snyk_token'
+
+
+            }
+        }
+
+
+
+        stage('push docker image') {
+            steps {
+                echo 'pushing docker image..'
+
+                sh 'echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
+                sh 'docker push kastourik12/eureka-server'
+
+
                 echo 'Deploying....'
             }
         }
