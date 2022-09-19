@@ -25,6 +25,7 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId: 'creds_docker', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
                             sh 'mvn clean install -P build-docker-image'
+                            sh 'docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PWD'
 
                 }
             }
@@ -36,7 +37,7 @@ pipeline {
                 echo 'Scanning..'
                // snykSecurity severity: 'high', snykInstallation: 'snyk', snykTokenId: 'snyk_token'
                 snykSecurity failOnIssues: false, snykInstallation: 'snyk', snykTokenId: 'snyk_token'
-
+                echo 'Scan done'
             }
         }
 
