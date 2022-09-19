@@ -65,9 +65,7 @@
             <groupId>com.kastourik12</groupId>
             <artifactId>shared-package</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>/var/jenkins_home/workspace/firstpipeline/shared-package/target/shared-package-1.0-SNAPSHOT.jar</systemPath>
-                    </dependency>
+                   </dependency>
     </dependencies>
 
     <build>
