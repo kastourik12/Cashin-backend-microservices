@@ -17,6 +17,9 @@ pipeline {
         }
         stage('Build & push') {
             steps {
+                echo 'test images'
+
+
                 echo 'Building..'
 
 
