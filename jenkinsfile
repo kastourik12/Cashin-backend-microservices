@@ -11,6 +11,7 @@ pipeline {
 
         stage('Checkout GIT') {
             steps {
+            echo 'Checkout GIT'
             checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-cred', url: 'https://github.com/kastourik12/Cashin-backend-microservices']]])
             }
         }
